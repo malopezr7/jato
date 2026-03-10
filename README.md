@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/jato-v0.1.0-e0944a?style=flat-square&labelColor=1a1a1a" alt="version" />
+  <img src="https://img.shields.io/npm/v/@malopezr7/jato?style=flat-square&labelColor=1a1a1a&color=e0944a" alt="version" />
   <img src="https://img.shields.io/github/license/malopezr7/jato?style=flat-square&labelColor=1a1a1a&color=918e88" alt="license" />
   <img src="https://img.shields.io/github/stars/malopezr7/jato?style=flat-square&labelColor=1a1a1a&color=918e88" alt="stars" />
   <img src="https://img.shields.io/badge/node-%3E%3D22-918e88?style=flat-square&labelColor=1a1a1a" alt="node" />
@@ -17,7 +17,7 @@
 <br />
 
 ```bash
-npx jato init
+npx @malopezr7/jato init
 ```
 
 ---
@@ -34,7 +34,7 @@ The real trick: jato installs a **skill that teaches your LLM to be your config 
 
 ```bash
 # Install and create your first jato
-npx jato init
+npx @malopezr7/jato init
 
 # Activate it
 jato use my-jato
@@ -47,6 +47,23 @@ Three init paths:
 - **Import** — scans your existing Claude/Codex/Gemini configs and extracts them
 - **Template** — starts from a built-in template (`starter`, `mobile`, `backend`, `fullstack`)
 - **Wizard** — just ask your AI to build one (the jato-manager skill handles it)
+
+## Quick Skill Setup
+
+Want the jato-manager skill in your AI tools right now, without setting up a full jato?
+
+```bash
+# Install the skill to all detected providers
+npx @malopezr7/jato skill install
+
+# Install to a specific provider only
+npx @malopezr7/jato skill install --provider claude
+
+# Install to multiple providers
+npx @malopezr7/jato skill install --provider claude --provider gemini
+```
+
+This copies the **jato-manager** skill directly into each provider's skills directory (`~/.claude/skills/`, `~/.gemini/skills/`, etc.), so your LLM can immediately help you manage jato configurations.
 
 ## How It Works
 
@@ -96,6 +113,7 @@ jato list                 Show available jatos
 jato off                  Deactivate the current jato
 jato doctor               Health check — schema, env vars, providers, skills
 jato install <repo>       Install jatos from a git repository
+jato skill install        Install the jato-manager skill to your AI providers
 ```
 
 That's the whole surface.
