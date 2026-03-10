@@ -25,12 +25,12 @@ function runCli(args: string): string {
 }
 
 describe("jato init --empty", () => {
-  it("creates an empty rig", () => {
+  it("creates an empty jato", () => {
     const output = runCli("init --empty --name test-rig --yes");
 
     expect(output).toContain("Created empty jato");
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "test-rig", "jato.yaml"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "test-rig", "instructions.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "test-rig", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "test-rig", "instructions.md"))).toBe(true);
     expect(existsSync(join(tmpHome, ".jato", "skills", "jato-manager.md"))).toBe(true);
   });
 });
@@ -40,17 +40,17 @@ describe("jato init --template", () => {
     const output = runCli("init --template starter --name my-starter --yes");
 
     expect(output).toContain("Created jato from template");
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "jato.yaml"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "instructions.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "providers", "claude.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "skills", "code-review.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "my-starter", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "my-starter", "instructions.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "my-starter", "providers", "claude.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "my-starter", "skills", "code-review.md"))).toBe(true);
   });
 
-  it("updates rig name in manifest", async () => {
+  it("updates jato name in manifest", async () => {
     runCli("init --template starter --name custom-name --yes");
 
     const { parse: parseYaml } = await import("yaml");
-    const raw = await readFile(join(tmpHome, ".jato", "rigs", "custom-name", "jato.yaml"), "utf8");
+    const raw = await readFile(join(tmpHome, ".jato", "jatos", "custom-name", "jato.yaml"), "utf8");
     const manifest = parseYaml(raw);
     expect(manifest.name).toBe("custom-name");
   });
@@ -77,6 +77,6 @@ describe("jato init --from", () => {
     const output = runCli("init --from claude --name imported --yes");
 
     expect(output).toContain("Imported");
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "imported", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "imported", "jato.yaml"))).toBe(true);
   });
 });

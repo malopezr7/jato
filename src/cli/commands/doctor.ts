@@ -32,7 +32,7 @@ export function registerDoctorCommand(program: Command): void {
         return;
       }
 
-      // Check 2: Active rig
+      // Check 2: Active jato
       const activeJatoName = await getActiveJato();
       checks.push({
         label: "Active jato is set",
@@ -45,11 +45,11 @@ export function registerDoctorCommand(program: Command): void {
         return;
       }
 
-      // Check 3: Rig is valid
-      let rigValid = false;
+      // Check 3: Jato is valid
+      let jatoValid = false;
       try {
-        const rig = await loadJato(activeJatoName);
-        rigValid = true;
+        const jato = await loadJato(activeJatoName);
+        jatoValid = true;
         checks.push({
           label: `Jato '${activeJatoName}' has valid jato.yaml`,
           ok: true,
@@ -57,7 +57,7 @@ export function registerDoctorCommand(program: Command): void {
 
         // Check 4: Enabled providers are installed
         const detected = await detectInstalledProviders();
-        const enabledProviders = Object.entries(rig.manifest.providers)
+        const enabledProviders = Object.entries(jato.manifest.providers)
           .filter(([, enabled]) => enabled)
           .map(([name]) => name);
 
@@ -81,7 +81,7 @@ export function registerDoctorCommand(program: Command): void {
         }
 
         // Check 5: Env vars for MCPs
-        for (const server of rig.manifest.mcp_servers) {
+        for (const server of jato.manifest.mcp_servers) {
           for (const envKey of server.env) {
             const defined = process.env[envKey] !== undefined;
             checks.push({

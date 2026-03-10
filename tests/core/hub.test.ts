@@ -29,16 +29,16 @@ describe("path helpers", () => {
     expect(getHubDir("/fake")).toBe("/fake/.jato");
   });
 
-  it("returns correct rigs dir", () => {
-    expect(getJatosDir("/fake")).toBe("/fake/.jato/rigs");
+  it("returns correct jatos dir", () => {
+    expect(getJatosDir("/fake")).toBe("/fake/.jato/jatos");
   });
 
   it("returns correct skills dir", () => {
     expect(getSkillsDir("/fake")).toBe("/fake/.jato/skills");
   });
 
-  it("returns correct rig dir for a named rig", () => {
-    expect(getJatoDir("mobile", "/fake")).toBe("/fake/.jato/rigs/mobile");
+  it("returns correct jato dir for a named jato", () => {
+    expect(getJatoDir("mobile", "/fake")).toBe("/fake/.jato/jatos/mobile");
   });
 });
 
@@ -47,7 +47,7 @@ describe("ensureHub", () => {
     await ensureHub(tmpHome);
     const { existsSync } = await import("node:fs");
     expect(existsSync(join(tmpHome, ".jato"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".jato", "rigs"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "jatos"))).toBe(true);
     expect(existsSync(join(tmpHome, ".jato", "skills"))).toBe(true);
   });
 
@@ -69,32 +69,32 @@ describe("global config", () => {
     expect(config.active_jato).toBe("mobile");
   });
 
-  it("reads active rig", async () => {
+  it("reads active jato", async () => {
     await writeGlobalConfig({ active_jato: "backend" }, tmpHome);
     const active = await getActiveJato(tmpHome);
     expect(active).toBe("backend");
   });
 
-  it("returns undefined when no active rig", async () => {
+  it("returns undefined when no active jato", async () => {
     const active = await getActiveJato(tmpHome);
     expect(active).toBeUndefined();
   });
 });
 
 describe("listJatos", () => {
-  it("returns empty array when no rigs", async () => {
-    const rigs = await listJatos(tmpHome);
-    expect(rigs).toEqual([]);
+  it("returns empty array when no jatos", async () => {
+    const jatos = await listJatos(tmpHome);
+    expect(jatos).toEqual([]);
   });
 
-  it("lists rig directories", async () => {
+  it("lists jato directories", async () => {
     await ensureHub(tmpHome);
-    await mkdir(join(tmpHome, ".jato", "rigs", "mobile"), { recursive: true });
-    await mkdir(join(tmpHome, ".jato", "rigs", "backend"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "jatos", "mobile"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "jatos", "backend"), { recursive: true });
     // Create a file to ensure it's filtered out
-    await writeFile(join(tmpHome, ".jato", "rigs", ".DS_Store"), "");
+    await writeFile(join(tmpHome, ".jato", "jatos", ".DS_Store"), "");
 
-    const rigs = await listJatos(tmpHome);
-    expect(rigs.sort()).toEqual(["backend", "mobile"]);
+    const jatos = await listJatos(tmpHome);
+    expect(jatos.sort()).toEqual(["backend", "mobile"]);
   });
 });

@@ -30,7 +30,7 @@ function runCli(args: string): string {
 }
 
 async function createRig(name: string) {
-  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+  const jatoDir = join(tmpHome, ".jato", "jatos", name);
   await mkdir(join(jatoDir, "providers"), { recursive: true });
   await mkdir(join(jatoDir, "skills"), { recursive: true });
   await mkdir(join(jatoDir, "agents"), { recursive: true });
@@ -47,7 +47,7 @@ async function createRig(name: string) {
 }
 
 describe("jato use", () => {
-  it("shows no active rig when none set", () => {
+  it("shows no active jato when none set", () => {
     const output = runCli("use");
     expect(output).toContain("No jato is currently active");
   });
@@ -64,7 +64,7 @@ describe("jato use", () => {
     expect(existsSync(join(tmpHome, ".claude", "skills", "jato-context", "SKILL.md"))).toBe(true);
   });
 
-  it("shows active rig after activation", async () => {
+  it("shows active jato after activation", async () => {
     await createRig("myrig");
     runCli("use myrig");
 

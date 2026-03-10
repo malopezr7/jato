@@ -43,12 +43,12 @@ export const opencodeProvider: Provider = {
 
   instructionsFileName: "",
 
-  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
+  materialize(jato: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     const config: Record<string, unknown> = {
-      mode: mapPermission(rig.manifest.permissions.auto_execute),
-      mcp: mapMcpServers(rig.manifest.mcp_servers),
+      mode: mapPermission(jato.manifest.permissions.auto_execute),
+      mcp: mapMcpServers(jato.manifest.mcp_servers),
     };
 
     files.push({

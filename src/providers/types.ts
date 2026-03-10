@@ -14,5 +14,5 @@ export interface Provider {
   configPath(home?: string): string;
   skillsDir(home?: string): string;
   instructionsFileName: string;
-  materialize(rig: ResolvedJato, home?: string): MaterializeResult;
+  materialize(jato: ResolvedJato, home?: string): MaterializeResult;
 }

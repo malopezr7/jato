@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { geminiProvider } from "../../src/providers/gemini.js";
 import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
+function makeJato(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/fake/.jato/rigs/test",
+    dir: "/fake/.jato/jatos/test",
     providerDocs: {},
     skills: [],
     agents: [],
@@ -20,13 +20,13 @@ function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
 
 describe("geminiProvider", () => {
   it("materializes settings with approvalMode", () => {
-    const result = geminiProvider.materialize(makeRig(), "/home/user");
+    const result = geminiProvider.materialize(makeJato(), "/home/user");
     const settings = JSON.parse(result.files[0].content);
     expect(settings.approvalMode).toBe("default");
   });
 
   it("sets yolo mode for auto_execute", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -35,13 +35,13 @@ describe("geminiProvider", () => {
       },
     });
 
-    const result = geminiProvider.materialize(rig, "/home/user");
+    const result = geminiProvider.materialize(jato, "/home/user");
     const settings = JSON.parse(result.files[0].content);
     expect(settings.approvalMode).toBe("yolo");
   });
 
   it("materializes MCPs with trust flag", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -59,18 +59,18 @@ describe("geminiProvider", () => {
       },
     });
 
-    const result = geminiProvider.materialize(rig, "/home/user");
+    const result = geminiProvider.materialize(jato, "/home/user");
     const settings = JSON.parse(result.files[0].content);
     expect(settings.mcpServers.github.trust).toBe(true);
     expect(settings.mcpServers.github.env).toEqual({ GITHUB_TOKEN: "" });
   });
 
   it("materializes GEMINI.md", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       providerDocs: { gemini: "# Gemini" },
     });
 
-    const result = geminiProvider.materialize(rig, "/home/user");
+    const result = geminiProvider.materialize(jato, "/home/user");
     expect(result.files).toHaveLength(2);
     expect(result.files[1].path).toBe("GEMINI.md");
   });

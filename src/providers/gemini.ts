@@ -44,12 +44,12 @@ export const geminiProvider: Provider = {
 
   instructionsFileName: "GEMINI.md",
 
-  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
+  materialize(jato: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     const settings: Record<string, unknown> = {
-      approvalMode: mapPermission(rig.manifest.permissions.auto_execute),
-      mcpServers: mapMcpServers(rig.manifest.mcp_servers),
+      approvalMode: mapPermission(jato.manifest.permissions.auto_execute),
+      mcpServers: mapMcpServers(jato.manifest.mcp_servers),
     };
 
     files.push({
@@ -57,10 +57,10 @@ export const geminiProvider: Provider = {
       content: JSON.stringify(settings, null, 2) + "\n",
     });
 
-    if (rig.providerDocs["gemini"]) {
+    if (jato.providerDocs["gemini"]) {
       files.push({
         path: "GEMINI.md",
-        content: rig.providerDocs["gemini"],
+        content: jato.providerDocs["gemini"],
       });
     }
 

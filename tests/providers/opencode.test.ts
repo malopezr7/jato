@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { opencodeProvider } from "../../src/providers/opencode.js";
 import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
+function makeJato(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/fake/.jato/rigs/test",
+    dir: "/fake/.jato/jatos/test",
     providerDocs: {},
     skills: [],
     agents: [],
@@ -26,13 +26,13 @@ describe("opencodeProvider", () => {
   });
 
   it("materializes config with interactive mode", () => {
-    const result = opencodeProvider.materialize(makeRig(), "/home/user");
+    const result = opencodeProvider.materialize(makeJato(), "/home/user");
     const config = JSON.parse(result.files[0].content);
     expect(config.mode).toBe("interactive");
   });
 
   it("sets auto mode for auto_execute", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -41,13 +41,13 @@ describe("opencodeProvider", () => {
       },
     });
 
-    const result = opencodeProvider.materialize(rig, "/home/user");
+    const result = opencodeProvider.materialize(jato, "/home/user");
     const config = JSON.parse(result.files[0].content);
     expect(config.mode).toBe("auto");
   });
 
   it("materializes MCP servers", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -65,15 +65,15 @@ describe("opencodeProvider", () => {
       },
     });
 
-    const result = opencodeProvider.materialize(rig, "/home/user");
+    const result = opencodeProvider.materialize(jato, "/home/user");
     const config = JSON.parse(result.files[0].content);
     expect(config.mcp.github).toBeDefined();
     expect(config.mcp.github.command).toBe("npx");
   });
 
   it("does not emit provider docs (no instructionsFileName)", () => {
-    const rig = makeRig();
-    const result = opencodeProvider.materialize(rig, "/home/user");
+    const jato = makeJato();
+    const result = opencodeProvider.materialize(jato, "/home/user");
     expect(result.files).toHaveLength(1);
   });
 });

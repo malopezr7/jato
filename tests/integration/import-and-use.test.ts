@@ -58,7 +58,7 @@ describe("import → use lifecycle", () => {
 
     // Verify jato.yaml was created with imported MCPs
     const jatoYaml = await readFile(
-      join(tmpHome, ".jato", "rigs", "imported", "jato.yaml"),
+      join(tmpHome, ".jato", "jatos", "imported", "jato.yaml"),
       "utf8",
     );
     const manifest = parseYaml(jatoYaml);
