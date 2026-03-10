@@ -3,6 +3,7 @@ interface Props {
   title: string;
 }
 const { title } = Astro.props;
+import "../styles/global.css";
 ---
 
 <!doctype html>
@@ -21,19 +22,22 @@ const { title } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
+    <!-- Theme init MUST run before paint to avoid FOUC -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem("rig-theme");
+        if (
+          stored === "dark" ||
+          (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <slot />
     <script>
-      // Theme initialization — runs before paint
-      const stored = localStorage.getItem("rig-theme");
-      if (
-        stored === "dark" ||
-        (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      }
-
       // Intersection observer for fade-in animations
       const observer = new IntersectionObserver(
         (entries) => {
@@ -44,7 +48,7 @@ const { title } = Astro.props;
             }
           });
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       );
 
       document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
@@ -67,7 +71,7 @@ const { title } = Astro.props;
               nav.classList.remove("nav-border");
             }
           },
-          { passive: true }
+          { passive: true },
         );
       }
     </script>

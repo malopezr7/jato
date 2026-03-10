@@ -25,9 +25,19 @@
         View on GitHub
       </a>
       <div
-        class="font-mono text-sm text-rig-btn-outline-text px-7 py-3 rounded-lg border border-rig-btn-outline-border select-all cursor-text transition-colors"
+        class="font-mono text-sm text-rig-btn-outline-text pl-7 pr-4 py-3 rounded-lg border border-rig-btn-outline-border transition-colors flex items-center gap-3"
       >
-        npx rig init
+        <code class="select-all">npx rig init</code>
+        <button
+          onclick="navigator.clipboard.writeText('npx rig init')"
+          aria-label="Copy"
+          class="text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer bg-transparent border-none p-0"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>

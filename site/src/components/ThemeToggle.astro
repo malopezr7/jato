@@ -9,29 +9,41 @@
 >
   <div
     id="toggle-knob"
-    class="absolute top-[3px] w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs shadow-sm transition-[left] duration-250"
-    style="background: var(--toggle-knob); left: 3px"
+    class="absolute top-[3px] w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs shadow-sm"
+    style="background: var(--toggle-knob); transition: left 0.25s cubic-bezier(0.22,1,0.36,1), background 0.3s"
   >
-    <span id="toggle-icon" class="leading-none">☀️</span>
+    <span id="toggle-icon" class="leading-none"></span>
   </div>
 </button>
 
-<script>
-  const toggle = document.getElementById("theme-toggle");
-  const knob = document.getElementById("toggle-knob");
-  const icon = document.getElementById("toggle-icon");
+<script is:inline>
+  (function () {
+    function initToggle() {
+      var toggle = document.getElementById("theme-toggle");
+      var knob = document.getElementById("toggle-knob");
+      var icon = document.getElementById("toggle-icon");
 
-  function updateKnob() {
-    const isDark = document.documentElement.classList.contains("dark");
-    if (knob) knob.style.left = isDark ? "25px" : "3px";
-    if (icon) icon.textContent = isDark ? "🌙" : "☀️";
-  }
+      function update() {
+        var isDark = document.documentElement.classList.contains("dark");
+        if (knob) knob.style.left = isDark ? "25px" : "3px";
+        if (icon) icon.textContent = isDark ? "\uD83C\uDF19" : "\u2600\uFE0F";
+      }
 
-  updateKnob();
+      update();
 
-  toggle?.addEventListener("click", () => {
-    const isDark = document.documentElement.classList.toggle("dark");
-    localStorage.setItem("rig-theme", isDark ? "dark" : "light");
-    updateKnob();
-  });
+      if (toggle) {
+        toggle.addEventListener("click", function () {
+          var isDark = document.documentElement.classList.toggle("dark");
+          localStorage.setItem("rig-theme", isDark ? "dark" : "light");
+          update();
+        });
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initToggle);
+    } else {
+      initToggle();
+    }
+  })();
 </script>
