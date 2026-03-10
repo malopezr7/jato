@@ -27,7 +27,7 @@
     >
       <div class="flex items-center gap-2 pl-5 py-3">
         <span class="text-jato-text-ghost select-none">$</span>
-        <code id="install-cmd" class="text-jato-text select-all">npx jato init</code>
+        <code id="install-cmd" class="text-jato-text select-all">npx @malopezr7/jato init</code>
       </div>
       <button
         id="copy-btn"
@@ -80,7 +80,7 @@
       if (!btn) return;
 
       btn.addEventListener("click", function () {
-        navigator.clipboard.writeText("npx jato init").then(function () {
+        navigator.clipboard.writeText("npx @malopezr7/jato init").then(function () {
           if (copyIcon) copyIcon.classList.add("hidden");
           if (checkIcon) checkIcon.classList.remove("hidden");
           setTimeout(function () {
