@@ -31,18 +31,18 @@ describe("jato doctor", () => {
     expect(output).toContain("Hub directory");
   });
 
-  it("runs full checks when hub and rig exist", async () => {
+  it("runs full checks when hub and jato exist", async () => {
     // Create hub with active rig
-    await mkdir(join(tmpHome, ".jato", "rigs", "test", "providers"), { recursive: true });
-    await mkdir(join(tmpHome, ".jato", "rigs", "test", "skills"), { recursive: true });
-    await mkdir(join(tmpHome, ".jato", "rigs", "test", "agents"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "jatos", "test", "providers"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "jatos", "test", "skills"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "jatos", "test", "agents"), { recursive: true });
 
     await writeFile(
       join(tmpHome, ".jato", "config.yaml"),
       stringifyYaml({ active_jato: "test" }),
     );
     await writeFile(
-      join(tmpHome, ".jato", "rigs", "test", "jato.yaml"),
+      join(tmpHome, ".jato", "jatos", "test", "jato.yaml"),
       stringifyYaml({
         name: "test",
         providers: { claude: true },

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { claudeProvider } from "../../src/providers/claude.js";
 import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
+function makeJato(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/fake/.jato/rigs/test",
+    dir: "/fake/.jato/jatos/test",
     providerDocs: {},
     skills: [],
     agents: [],
@@ -26,7 +26,7 @@ describe("claudeProvider", () => {
   });
 
   it("materializes basic settings", () => {
-    const result = claudeProvider.materialize(makeRig(), "/home/user");
+    const result = claudeProvider.materialize(makeJato(), "/home/user");
     expect(result.files).toHaveLength(1);
 
     const settings = JSON.parse(result.files[0].content);
@@ -35,7 +35,7 @@ describe("claudeProvider", () => {
   });
 
   it("materializes MCP servers", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: { claude: true },
@@ -61,7 +61,7 @@ describe("claudeProvider", () => {
       },
     });
 
-    const result = claudeProvider.materialize(rig, "/home/user");
+    const result = claudeProvider.materialize(jato, "/home/user");
     const settings = JSON.parse(result.files[0].content);
 
     expect(settings.mcpServers.github).toBeDefined();
@@ -72,7 +72,7 @@ describe("claudeProvider", () => {
   });
 
   it("materializes auto_execute permission", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -81,17 +81,17 @@ describe("claudeProvider", () => {
       },
     });
 
-    const result = claudeProvider.materialize(rig, "/home/user");
+    const result = claudeProvider.materialize(jato, "/home/user");
     const settings = JSON.parse(result.files[0].content);
     expect(settings.permissions.mode).toBe("allowedCommands");
   });
 
   it("materializes provider docs as CLAUDE.md", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       providerDocs: { claude: "# Claude Instructions\nDo things." },
     });
 
-    const result = claudeProvider.materialize(rig, "/home/user");
+    const result = claudeProvider.materialize(jato, "/home/user");
     expect(result.files).toHaveLength(2);
     expect(result.files[1].path).toBe("CLAUDE.md");
     expect(result.files[1].content).toContain("Claude Instructions");

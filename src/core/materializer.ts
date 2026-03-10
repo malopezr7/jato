@@ -21,11 +21,11 @@ export async function materialize(
   options: MaterializeOptions = {},
 ): Promise<MaterializeOutput> {
   const { home, targetRoot = process.cwd() } = options;
-  const rig = await loadJato(jatoName, home);
+  const jato = await loadJato(jatoName, home);
 
   const filesWritten: BackupResult[] = [];
 
-  const enabledProviders = Object.entries(rig.manifest.providers)
+  const enabledProviders = Object.entries(jato.manifest.providers)
     .filter(([, enabled]) => enabled)
     .map(([name]) => name);
 
@@ -33,7 +33,7 @@ export async function materialize(
     const provider = getProvider(providerName);
     if (!provider) continue;
 
-    const result = provider.materialize(rig, home);
+    const result = provider.materialize(jato, home);
 
     for (const file of result.files) {
       const filePath = file.path.startsWith("/")
@@ -47,7 +47,7 @@ export async function materialize(
 
     const contextSkillDir = join(skillsDir, "jato-context");
     await mkdir(contextSkillDir, { recursive: true });
-    const contextContent = generateJatoContextSkill(rig);
+    const contextContent = generateJatoContextSkill(jato);
     const contextBackup = await writeWithBackup(
       join(contextSkillDir, "SKILL.md"),
       contextContent,

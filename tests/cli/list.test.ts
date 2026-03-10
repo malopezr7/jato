@@ -24,8 +24,8 @@ function runCli(args: string): string {
   });
 }
 
-async function createRig(name: string, description: string) {
-  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+async function createJato(name: string, description: string) {
+  const jatoDir = join(tmpHome, ".jato", "jatos", name);
   await mkdir(jatoDir, { recursive: true });
   await writeFile(
     join(jatoDir, "jato.yaml"),
@@ -34,14 +34,14 @@ async function createRig(name: string, description: string) {
 }
 
 describe("jato list", () => {
-  it("shows no rigs message", () => {
+  it("shows no jatos message", () => {
     const output = runCli("list");
     expect(output).toContain("No jatos found");
   });
 
-  it("lists available rigs", async () => {
-    await createRig("mobile", "Mobile dev");
-    await createRig("backend", "Backend dev");
+  it("lists available jatos", async () => {
+    await createJato("mobile", "Mobile dev");
+    await createJato("backend", "Backend dev");
 
     const output = runCli("list");
     expect(output).toContain("mobile");

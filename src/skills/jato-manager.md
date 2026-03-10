@@ -1,65 +1,84 @@
-# jato — Manager Skill
+---
+name: jato-manager
+description: >
+  Manages jato configurations — create, modify, switch, and inspect AI environment setups.
+  Use when user mentions 'jato', asks to 'create a jato', 'switch jato', 'add an MCP',
+  'change AI config', 'set up my tools', or asks about their active environment configuration.
+  Also use when user wants to add skills, agents, or MCP servers to their setup.
+---
 
-You are the jato manager. You help users create, modify, and manage their jato configurations. A jato is a complete AI environment configuration that can be activated to set up all AI coding tools (Claude Code, Codex CLI, Gemini CLI, OpenCode) at once.
+# jato Manager
 
-## CLI Operations
+You help users create, modify, and manage their jato configurations. A jato is a complete AI environment configuration that activates across all AI coding tools (Claude Code, Codex CLI, Gemini CLI, OpenCode) at once.
 
-You can manage jatos by running these commands:
+## Prerequisites
 
-- `jato list` — Show all available jatos and which is active
-- `jato use <name>` — Switch to a different jato (materializes all configs)
-- `jato use` — Show which jato is currently active
-- `jato off` — Deactivate the current jato
-- `jato doctor` — Check health of the current jato setup
-- `jato install <repo-url>` — Install jatos from a git repository
+Verify the CLI is available before any operation:
 
-Always run `jato use <name>` after modifying a jato's files to re-materialize.
+```bash
+npx @malopezr7/jato list
+```
+
+You can also use `pnpm dlx @malopezr7/jato` instead of `npx`.
+
+## CLI Commands
+
+| Command | Purpose |
+|---------|---------|
+| `jato list` | Show all jatos and which is active |
+| `jato use <name>` | Activate a jato (materializes configs) |
+| `jato use` | Show active jato |
+| `jato off` | Deactivate current jato |
+| `jato doctor` | Health check |
+| `jato init` | Create new jato (interactive or flags) |
+| `jato init --from auto --name <n>` | Import from existing tool configs |
+| `jato init --template <t> --name <n>` | From template (starter, backend, fullstack, mobile) |
+| `jato install <repo-url>` | Install jatos from git |
+| `jato skill install` | Install this skill to providers |
+
+CRITICAL: Always run `jato use <name>` after modifying any jato files to re-materialize.
 
 ## Hub Structure
-
-All jatos live in `~/.jato/`:
 
 ```
 ~/.jato/
   config.yaml              ← active_jato: <name>
   skills/
-    jato-manager.md          ← this file
+    jato-manager.md        ← this file
   jatos/
     <name>/
-      jato.yaml              ← manifest (providers, MCPs, permissions)
-      instructions.md       ← shared instructions for all providers
+      jato.yaml            ← manifest (providers, MCPs, permissions)
+      instructions.md      ← shared instructions for all providers
       providers/
-        claude.md           ← materializes as CLAUDE.md
-        codex.md            ← materializes as AGENTS.md
-        gemini.md           ← materializes as GEMINI.md
+        claude.md          ← materializes as CLAUDE.md
+        codex.md           ← materializes as AGENTS.md
+        gemini.md          ← materializes as GEMINI.md
       skills/
-        <skill-name>.md     ← specialized context files
+        <skill-name>.md    ← specialized context files
       agents/
-        <agent-name>.md     ← agent definitions
+        <agent-name>.md    ← agent definitions
 ```
 
 ## Creating a New Jato
 
-When the user wants to create a new jato, guide them through this process:
+Both CLI and manual creation are valid. The CLI is faster for imports; manual creation enables a guided step-by-step experience.
 
-### Step 1: Understand the context
-Ask about:
-- What role/context is this jato for? (mobile dev, backend, data science, devops, code review...)
-- What tech stack? (React Native, Node.js, Python, Go...)
-- What AI tools do they use? (Claude Code, Codex, Gemini...)
+### Via CLI
 
-### Step 2: Build the manifest
-Based on their answers, create the jato directory structure:
+```bash
+npx @malopezr7/jato init                                    # Interactive wizard
+npx @malopezr7/jato init --from auto --name myproject       # Import existing
+npx @malopezr7/jato init --template mobile --name myproject # From template
+```
 
-1. Create directory: `~/.jato/jatos/<name>/`
-2. Create subdirectories: `providers/`, `skills/`, `agents/`
-3. Write `jato.yaml` with:
-   - Appropriate name and description
-   - Enabled providers based on their tools
-   - MCP servers relevant to their stack
-   - Permission settings based on their preference
+### Via guided manual creation
 
-Example `jato.yaml`:
+Walk the user through these steps:
+
+**Step 1 — Understand context:** Ask about the role (mobile, backend, devops...), tech stack, and which AI tools they use.
+
+**Step 2 — Build manifest:** Create `~/.jato/jatos/<name>/` with subdirectories `providers/`, `skills/`, `agents/`. Write `jato.yaml`:
+
 ```yaml
 name: mobile
 description: React Native mobile development setup
@@ -75,88 +94,76 @@ mcp_servers:
     args: [-y, "@modelcontextprotocol/server-github"]
     env: [GITHUB_TOKEN]
 
-  - id: expo
-    command: npx
-    args: [-y, "expo-mcp-server"]
-    env: [EXPO_TOKEN]
-
 permissions:
   auto_execute: false
 ```
 
-### Step 3: Generate instructions
-Create `instructions.md` with context-appropriate guidelines:
-- Coding conventions for their stack
-- Review standards
-- Architecture patterns they follow
+**Step 3 — Write instructions:** Create `instructions.md` with shared conventions, then `providers/<name>.md` for each enabled provider.
 
-### Step 4: Generate provider-specific instructions
-For each enabled provider, create `providers/<provider>.md`:
-- `claude.md` — Instructions specific to Claude Code behavior
-- `codex.md` — Instructions specific to Codex CLI behavior
-- `gemini.md` — Instructions specific to Gemini CLI behavior
+**Step 4 — Create skills:** Recommend skills based on the stack (see below). Each skill should be a focused `.md` file in `skills/`.
 
-Tailor each to the provider's strengths and format expectations.
+**Step 5 — Activate:** Run `jato use <name>` to materialize.
 
-### Step 5: Generate skills
-Create relevant skill files in `skills/`:
-- Code review guidelines for their stack
-- Testing patterns
-- Architecture decision records
-- Deployment procedures
-- Any domain-specific knowledge
+## Skill Recommendations
 
-### Step 6: Generate agents (if requested)
-Create agent definitions in `agents/`:
-- Reviewer agent
-- Architect agent
-- Testing agent
+When creating skills, recommend based on the user's stack. Each skill should be **actionable** (concrete patterns, not vague advice), **specific** (reference actual libraries and conventions), and **concise** (2-4KB, one topic per file).
 
-### Step 7: Activate
-After generating all files, run `jato use <name>` to materialize.
+### By stack
+
+| Stack | Recommended skills |
+|-------|--------------------|
+| **Mobile** | testing (component/hook patterns, mock native modules), viewmodel-architecture, native-bridge, code-review |
+| **Backend** | api-patterns (REST/GraphQL, error format, pagination), database (queries, migrations, pooling), testing, security |
+| **Frontend** | component-patterns, testing (user-event, MSW), accessibility (ARIA, keyboard nav), styling |
+| **Full-stack** | code-review, testing, git-workflow, architecture |
+| **DevOps** | deployment (CI/CD, rollback), monitoring (logging, alerts), security (secrets, access) |
+
+### What makes a good skill
+
+- Include concrete code templates and "when to use / when NOT to use" guidance
+- Reference actual libraries, file paths, and project conventions
+- Keep each skill focused on one topic (under 500 lines)
+- Put critical instructions at the top — Claude reads top-down
 
 ## Modifying an Existing Jato
 
-When the user wants to modify their active jato:
+| Change | How |
+|--------|-----|
+| Add MCP | Edit `jato.yaml`, add server entry |
+| Add skill | Create `.md` in `skills/` |
+| Change instructions | Edit `instructions.md` or `providers/*.md` |
+| Add agent | Create `.md` in `agents/` |
 
-- **Add an MCP**: Edit `~/.jato/jatos/<active>/jato.yaml`, add the server entry, then run `jato use <active>`
-- **Add a skill**: Create a new `.md` file in `~/.jato/jatos/<active>/skills/`, then run `jato use <active>`
-- **Change instructions**: Edit `instructions.md` or files in `providers/`, then run `jato use <active>`
-- **Add an agent**: Create a new `.md` file in `~/.jato/jatos/<active>/agents/`, then run `jato use <active>`
+After any change: `jato use <name>` to re-materialize.
 
-Always remind the user to run `jato use <name>` after changes to re-materialize.
+## Common MCP Servers
 
-## Inspecting a Jato
+| Server | Command | Env vars |
+|--------|---------|----------|
+| github | `npx -y @modelcontextprotocol/server-github` | GITHUB_TOKEN |
+| filesystem | `npx -y @modelcontextprotocol/server-filesystem` | — |
+| postgres | `npx -y @modelcontextprotocol/server-postgres` | DATABASE_URL |
+| sqlite | `npx -y @modelcontextprotocol/server-sqlite` | — |
+| brave-search | `npx -y @modelcontextprotocol/server-brave-search` | BRAVE_API_KEY |
+| fetch | `npx -y @modelcontextprotocol/server-fetch` | — |
+| memory | `npx -y @modelcontextprotocol/server-memory` | — |
+| supabase | `npx -y @anthropic/mcp-server-supabase` | SUPABASE_URL, SUPABASE_KEY |
+| sentry | `npx -y @sentry/mcp-server` | SENTRY_AUTH_TOKEN |
+| linear | `npx -y @anthropic/mcp-server-linear` | LINEAR_API_KEY |
+| slack | `npx -y @anthropic/mcp-server-slack` | SLACK_BOT_TOKEN |
+| puppeteer | `npx -y @anthropic/mcp-server-puppeteer` | — |
+| docker | `npx -y @modelcontextprotocol/server-docker` | — |
 
-When the user asks about their current jato or wants to see what's configured:
+## Troubleshooting
 
-1. Read `~/.jato/config.yaml` to find the active jato
-2. Read `~/.jato/jatos/<active>/jato.yaml` for the manifest
-3. List files in `skills/`, `agents/`, `providers/` to show what's available
-4. Present a clear summary
+### jato use fails with "not found"
+**Cause:** Jato name doesn't exist in `~/.jato/jatos/`
+**Fix:** Run `jato list` to see available names; check spelling
 
-## Common MCP Server References
+### MCP server not connecting after activation
+**Cause:** Missing environment variables
+**Fix:** Check `env` entries in `jato.yaml`; ensure vars are set in your shell
 
-When suggesting MCPs, use these known configurations:
-
-- **github**: `npx -y @modelcontextprotocol/server-github` env: [GITHUB_TOKEN]
-- **filesystem**: `npx -y @modelcontextprotocol/server-filesystem` args: [<paths>]
-- **postgres**: `npx -y @modelcontextprotocol/server-postgres` env: [DATABASE_URL]
-- **sqlite**: `npx -y @modelcontextprotocol/server-sqlite` args: [<db-path>]
-- **brave-search**: `npx -y @modelcontextprotocol/server-brave-search` env: [BRAVE_API_KEY]
-- **fetch**: `npx -y @modelcontextprotocol/server-fetch`
-- **memory**: `npx -y @modelcontextprotocol/server-memory`
-- **supabase**: `npx -y @anthropic/mcp-server-supabase` env: [SUPABASE_URL, SUPABASE_KEY]
-- **sentry**: `npx -y @sentry/mcp-server` env: [SENTRY_AUTH_TOKEN]
-- **linear**: `npx -y @anthropic/mcp-server-linear` env: [LINEAR_API_KEY]
-- **slack**: `npx -y @anthropic/mcp-server-slack` env: [SLACK_BOT_TOKEN]
-- **puppeteer**: `npx -y @anthropic/mcp-server-puppeteer`
-- **docker**: `npx -y @modelcontextprotocol/server-docker`
-
-## Tips for Good Jatos
-
-- Keep instructions focused: one jato per role/context
-- Put shared conventions in `instructions.md`, provider-specific in `providers/`
-- Skills should be actionable: specific patterns, not vague advice
-- Use MCPs that match the actual workflow (don't add MCPs you won't use)
-- Name jatos clearly: `mobile`, `backend`, `code-review`, not `my-stuff`
+### Changes not reflected after editing files
+**Cause:** Forgot to re-materialize
+**Fix:** Run `jato use <name>` after every file change

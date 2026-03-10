@@ -34,10 +34,10 @@ export function registerInstallCommand(program: Command): void {
 
         const repoDir = join(tmpDir, "repo");
 
-        // Find rigs in the repo
+        // Find jatos in the repo
         // Look for directories with jato.yaml
-        const jatosDir = existsSync(join(repoDir, "rigs"))
-          ? join(repoDir, "rigs")
+        const jatosDir = existsSync(join(repoDir, "jatos"))
+          ? join(repoDir, "jatos")
           : repoDir;
 
         const entries = await readdir(jatosDir, { withFileTypes: true });

@@ -34,8 +34,8 @@ describe("full lifecycle: init → use → list → off", () => {
     const initOutput = runCli("init --template starter --name my-rig --yes");
     expect(initOutput).toContain("Created jato from template");
 
-    // Verify rig was created
-    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-rig", "jato.yaml"))).toBe(true);
+    // Verify jato was created
+    expect(existsSync(join(tmpHome, ".jato", "jatos", "my-rig", "jato.yaml"))).toBe(true);
     expect(existsSync(join(tmpHome, ".jato", "skills", "jato-manager.md"))).toBe(true);
 
     // Step 2: Use the jato
@@ -56,7 +56,7 @@ describe("full lifecycle: init → use → list → off", () => {
     expect(contextSkill).toContain("Active Jato: my-rig");
     expect(contextSkill).toContain("github");
 
-    // Step 3: List rigs
+    // Step 3: List jatos
     const listOutput = runCli("list");
     expect(listOutput).toContain("my-rig");
     expect(listOutput).toContain("[active]");
@@ -80,9 +80,9 @@ describe("full lifecycle: init → use → list → off", () => {
   });
 });
 
-describe("multiple rigs", () => {
-  it("can create and switch between rigs", () => {
-    // Create two rigs
+describe("multiple jatos", () => {
+  it("can create and switch between jatos", () => {
+    // Create two jatos
     runCli("init --template starter --name rig-a --yes");
     runCli("init --template backend --name rig-b --yes");
 

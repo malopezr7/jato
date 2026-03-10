@@ -24,7 +24,7 @@ async function createRig(name: string, manifest: Record<string, unknown>, extras
   providerDocs?: Record<string, string>;
   skills?: Record<string, string>;
 }) {
-  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+  const jatoDir = join(tmpHome, ".jato", "jatos", name);
   await mkdir(join(jatoDir, "providers"), { recursive: true });
   await mkdir(join(jatoDir, "skills"), { recursive: true });
   await mkdir(join(jatoDir, "agents"), { recursive: true });
@@ -84,10 +84,10 @@ describe("materialize", () => {
     const managerSkill = join(tmpHome, ".claude", "skills", "jato-manager", "SKILL.md");
     expect(existsSync(managerSkill)).toBe(true);
     const managerContent = await readFile(managerSkill, "utf8");
-    expect(managerContent).toContain("jato — Manager Skill");
+    expect(managerContent).toContain("name: jato-manager");
   });
 
-  it("updates global config with active rig", async () => {
+  it("updates global config with active jato", async () => {
     await createRig("myrig", {
       name: "myrig",
       providers: { claude: true },
@@ -115,7 +115,7 @@ describe("materialize", () => {
     expect(existsSync(geminiSettings)).toBe(false);
   });
 
-  it("throws for nonexistent rig", async () => {
+  it("throws for nonexistent jato", async () => {
     await expect(
       materialize("nonexistent", { home: tmpHome })
     ).rejects.toThrow("Jato 'nonexistent' not found");

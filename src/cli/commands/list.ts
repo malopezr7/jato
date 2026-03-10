@@ -6,24 +6,24 @@ import { loadJato } from "../../core/jato.js";
 export function registerListCommand(program: Command): void {
   program
     .command("list")
-    .description("List all available rigs")
+    .description("List all available jatos")
     .action(async () => {
-      const rigs = await listJatos();
+      const jatos = await listJatos();
       const active = await getActiveJato();
 
-      if (rigs.length === 0) {
+      if (jatos.length === 0) {
         process.stdout.write("  No jatos found. Run `jato init` to create one.\n");
         return;
       }
 
       process.stdout.write("\n");
-      for (const name of rigs) {
+      for (const name of jatos) {
         let description = "";
         try {
-          const rig = await loadJato(name);
-          description = rig.manifest.description ?? "";
+          const jato = await loadJato(name);
+          description = jato.manifest.description ?? "";
         } catch {
-          // Skip invalid rigs
+          // Skip invalid jatos
         }
 
         const isActive = name === active;

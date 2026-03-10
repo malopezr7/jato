@@ -16,7 +16,7 @@ export function getConfigPath(home?: string): string {
 }
 
 export function getJatosDir(home?: string): string {
-  return join(getHubDir(home), "rigs");
+  return join(getHubDir(home), "jatos");
 }
 
 export function getSkillsDir(home?: string): string {
@@ -29,7 +29,7 @@ export function getJatoDir(jatoName: string, home?: string): string {
 
 export async function ensureHub(home?: string): Promise<void> {
   const hubDir = getHubDir(home);
-  await mkdir(join(hubDir, "rigs"), { recursive: true });
+  await mkdir(join(hubDir, "jatos"), { recursive: true });
   await mkdir(join(hubDir, "skills"), { recursive: true });
 }
 

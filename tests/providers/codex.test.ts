@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { codexProvider } from "../../src/providers/codex.js";
 import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
+function makeJato(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/fake/.jato/rigs/test",
+    dir: "/fake/.jato/jatos/test",
     providerDocs: {},
     skills: [],
     agents: [],
@@ -26,13 +26,13 @@ describe("codexProvider", () => {
   });
 
   it("materializes basic TOML config", () => {
-    const result = codexProvider.materialize(makeRig(), "/home/user");
+    const result = codexProvider.materialize(makeJato(), "/home/user");
     expect(result.files).toHaveLength(1);
     expect(result.files[0].content).toContain('approval_policy = "on-request"');
   });
 
   it("materializes MCP servers in TOML format", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: { codex: true },
@@ -50,7 +50,7 @@ describe("codexProvider", () => {
       },
     });
 
-    const result = codexProvider.materialize(rig, "/home/user");
+    const result = codexProvider.materialize(jato, "/home/user");
     const content = result.files[0].content;
     expect(content).toContain("[mcp_servers.github]");
     expect(content).toContain('type = "stdio"');
@@ -60,7 +60,7 @@ describe("codexProvider", () => {
   });
 
   it("materializes http transport servers", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: { codex: true },
@@ -78,14 +78,14 @@ describe("codexProvider", () => {
       },
     });
 
-    const result = codexProvider.materialize(rig, "/home/user");
+    const result = codexProvider.materialize(jato, "/home/user");
     const content = result.files[0].content;
     expect(content).toContain('type = "http"');
     expect(content).toContain('url = "https://example.com/mcp"');
   });
 
   it("materializes auto-edit permission", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       manifest: {
         name: "test",
         providers: {},
@@ -94,16 +94,16 @@ describe("codexProvider", () => {
       },
     });
 
-    const result = codexProvider.materialize(rig, "/home/user");
+    const result = codexProvider.materialize(jato, "/home/user");
     expect(result.files[0].content).toContain('approval_policy = "auto-edit"');
   });
 
   it("materializes provider docs as AGENTS.md", () => {
-    const rig = makeRig({
+    const jato = makeJato({
       providerDocs: { codex: "# Codex Instructions" },
     });
 
-    const result = codexProvider.materialize(rig, "/home/user");
+    const result = codexProvider.materialize(jato, "/home/user");
     expect(result.files).toHaveLength(2);
     expect(result.files[1].path).toBe("AGENTS.md");
   });

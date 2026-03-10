@@ -16,13 +16,13 @@ function tomlKey(key: string): string {
   return /^[a-zA-Z0-9_-]+$/.test(key) ? key : JSON.stringify(key);
 }
 
-function renderCodexConfig(rig: ResolvedJato): string {
+function renderCodexConfig(jato: ResolvedJato): string {
   const lines: string[] = [];
 
-  lines.push(`approval_policy = ${tomlString(rig.manifest.permissions.auto_execute ? "auto-edit" : "on-request")}`);
+  lines.push(`approval_policy = ${tomlString(jato.manifest.permissions.auto_execute ? "auto-edit" : "on-request")}`);
   lines.push("");
 
-  for (const server of rig.manifest.mcp_servers) {
+  for (const server of jato.manifest.mcp_servers) {
     if (!server.enabled) continue;
     lines.push(`[mcp_servers.${tomlKey(server.id)}]`);
 
@@ -62,18 +62,18 @@ export const codexProvider: Provider = {
 
   instructionsFileName: "AGENTS.md",
 
-  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
+  materialize(jato: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     files.push({
       path: this.configPath(home),
-      content: renderCodexConfig(rig),
+      content: renderCodexConfig(jato),
     });
 
-    if (rig.providerDocs["codex"]) {
+    if (jato.providerDocs["codex"]) {
       files.push({
         path: "AGENTS.md",
-        content: rig.providerDocs["codex"],
+        content: jato.providerDocs["codex"],
       });
     }
 

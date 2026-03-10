@@ -43,14 +43,14 @@ export const claudeProvider: Provider = {
 
   instructionsFileName: "CLAUDE.md",
 
-  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
+  materialize(jato: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     const settings: Record<string, unknown> = {
       permissions: {
-        mode: mapPermission(rig.manifest.permissions.auto_execute),
+        mode: mapPermission(jato.manifest.permissions.auto_execute),
       },
-      mcpServers: mapMcpServers(rig.manifest.mcp_servers),
+      mcpServers: mapMcpServers(jato.manifest.mcp_servers),
     };
 
     files.push({
@@ -58,10 +58,10 @@ export const claudeProvider: Provider = {
       content: JSON.stringify(settings, null, 2) + "\n",
     });
 
-    if (rig.providerDocs["claude"]) {
+    if (jato.providerDocs["claude"]) {
       files.push({
         path: "CLAUDE.md",
-        content: rig.providerDocs["claude"],
+        content: jato.providerDocs["claude"],
       });
     }
 

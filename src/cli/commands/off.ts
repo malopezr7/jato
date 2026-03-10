@@ -10,11 +10,11 @@ export function registerOffCommand(program: Command): void {
       const active = await getActiveJato();
 
       if (!active) {
-        process.stdout.write("  No rig is currently active.\n");
+        process.stdout.write("  No jato is currently active.\n");
         return;
       }
 
       await writeGlobalConfig({});
-      process.stdout.write(`  ${chalk.green("✓")} Deactivated rig '${active}'\n`);
+      process.stdout.write(`  ${chalk.green("✓")} Deactivated jato '${active}'\n`);
     });
 }
