@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 import type { Provider, MaterializeResult } from "./types.js";
-import type { ResolvedRig } from "../core/rig.js";
+import type { ResolvedJato } from "../core/jato.js";
 import type { McpServer } from "../core/schema.js";
 
 function mapMcpServers(
@@ -43,7 +43,7 @@ export const claudeProvider: Provider = {
 
   instructionsFileName: "CLAUDE.md",
 
-  materialize(rig: ResolvedRig, home?: string): MaterializeResult {
+  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     const settings: Record<string, unknown> = {

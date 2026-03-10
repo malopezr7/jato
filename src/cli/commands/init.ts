@@ -4,7 +4,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { stringify as stringifyYaml } from "yaml";
 import chalk from "chalk";
-import { ensureHub, getRigDir, getRigsDir, getSkillsDir } from "../../core/hub.js";
+import { ensureHub, getJatoDir, getJatosDir, getSkillsDir } from "../../core/hub.js";
 import { detectInstalledProviders } from "../../providers/detector.js";
 import { importClaude } from "../../importers/claude.js";
 import { importCodex } from "../../importers/codex.js";
@@ -13,7 +13,7 @@ import { importOpenCode } from "../../importers/opencode.js";
 import { mergeImports } from "../../importers/merge.js";
 import { copyTemplate, listTemplates } from "../../templates/index.js";
 import type { ImportResult } from "../../importers/types.js";
-import type { RigManifest } from "../../core/schema.js";
+import type { JatoManifest } from "../../core/schema.js";
 
 const importerMap: Record<string, (home?: string) => Promise<ImportResult>> = {
   claude: importClaude,
@@ -22,9 +22,9 @@ const importerMap: Record<string, (home?: string) => Promise<ImportResult>> = {
   opencode: importOpenCode,
 };
 
-async function installRigManagerSkill(home?: string): Promise<void> {
+async function installJatoManagerSkill(home?: string): Promise<void> {
   const __dirname = dirname(fileURLToPath(import.meta.url));
-  const sourcePath = join(__dirname, "..", "..", "skills", "rig-manager.md");
+  const sourcePath = join(__dirname, "..", "..", "skills", "jato-manager.md");
   const destDir = getSkillsDir(home);
   await mkdir(destDir, { recursive: true });
 
@@ -33,17 +33,17 @@ async function installRigManagerSkill(home?: string): Promise<void> {
     content = await readFile(sourcePath, "utf8");
   } catch {
     // Fallback for development: read from src
-    const srcPath = join(__dirname, "..", "..", "..", "src", "skills", "rig-manager.md");
+    const srcPath = join(__dirname, "..", "..", "..", "src", "skills", "jato-manager.md");
     content = await readFile(srcPath, "utf8");
   }
-  await writeFile(join(destDir, "rig-manager.md"), content, "utf8");
+  await writeFile(join(destDir, "jato-manager.md"), content, "utf8");
 }
 
-async function createEmptyRig(name: string, home?: string): Promise<void> {
-  const rigDir = getRigDir(name, home);
-  await mkdir(join(rigDir, "providers"), { recursive: true });
-  await mkdir(join(rigDir, "skills"), { recursive: true });
-  await mkdir(join(rigDir, "agents"), { recursive: true });
+async function createEmptyJato(name: string, home?: string): Promise<void> {
+  const jatoDir = getJatoDir(name, home);
+  await mkdir(join(jatoDir, "providers"), { recursive: true });
+  await mkdir(join(jatoDir, "skills"), { recursive: true });
+  await mkdir(join(jatoDir, "agents"), { recursive: true });
 
   const detected = await detectInstalledProviders(home);
   const providers: Record<string, boolean> = {};
@@ -51,7 +51,7 @@ async function createEmptyRig(name: string, home?: string): Promise<void> {
     if (d.found) providers[d.name] = true;
   }
 
-  const manifest: RigManifest = {
+  const manifest: JatoManifest = {
     name,
     description: "",
     providers,
@@ -59,9 +59,9 @@ async function createEmptyRig(name: string, home?: string): Promise<void> {
     permissions: { auto_execute: false },
   };
 
-  await writeFile(join(rigDir, "rig.yaml"), stringifyYaml(manifest), "utf8");
+  await writeFile(join(jatoDir, "jato.yaml"), stringifyYaml(manifest), "utf8");
   await writeFile(
-    join(rigDir, "instructions.md"),
+    join(jatoDir, "instructions.md"),
     "# Instructions\n\nAdd your global instructions here.\n",
     "utf8",
   );
@@ -90,12 +90,12 @@ async function createFromImport(
   }
 
   const merged = mergeImports(results);
-  const rigDir = getRigDir(name, home);
-  await mkdir(join(rigDir, "providers"), { recursive: true });
-  await mkdir(join(rigDir, "skills"), { recursive: true });
-  await mkdir(join(rigDir, "agents"), { recursive: true });
+  const jatoDir = getJatoDir(name, home);
+  await mkdir(join(jatoDir, "providers"), { recursive: true });
+  await mkdir(join(jatoDir, "skills"), { recursive: true });
+  await mkdir(join(jatoDir, "agents"), { recursive: true });
 
-  const manifest: RigManifest = {
+  const manifest: JatoManifest = {
     name,
     description: "",
     providers: merged.providers,
@@ -103,16 +103,16 @@ async function createFromImport(
     permissions: { auto_execute: merged.autoExecute },
   };
 
-  await writeFile(join(rigDir, "rig.yaml"), stringifyYaml(manifest), "utf8");
+  await writeFile(join(jatoDir, "jato.yaml"), stringifyYaml(manifest), "utf8");
 
   const docNames: string[] = [];
   for (const [provider, content] of Object.entries(merged.providerDocs)) {
-    await writeFile(join(rigDir, "providers", `${provider}.md`), content, "utf8");
+    await writeFile(join(jatoDir, "providers", `${provider}.md`), content, "utf8");
     docNames.push(provider);
   }
 
   await writeFile(
-    join(rigDir, "instructions.md"),
+    join(jatoDir, "instructions.md"),
     "# Instructions\n\nAdd your global instructions here.\n",
     "utf8",
   );
@@ -123,11 +123,11 @@ async function createFromImport(
 export function registerInitCommand(program: Command): void {
   program
     .command("init")
-    .description("Initialize rig hub and create your first rig")
+    .description("Initialize jato hub and create your first jato")
     .option("--from <providers>", "Import from providers (comma-separated, or 'auto')")
     .option("--template <name>", "Create from a template")
-    .option("--empty", "Create an empty rig")
-    .option("--name <name>", "Name for the new rig")
+    .option("--empty", "Create an empty jato")
+    .option("--name <name>", "Name for the new jato")
     .option("--yes", "Skip confirmations")
     .action(async (opts: {
       from?: string;
@@ -151,46 +151,46 @@ export function registerInitCommand(program: Command): void {
         }
 
         const { mcpCount, providerDocs } = await createFromImport(providerNames, name);
-        await installRigManagerSkill();
+        await installJatoManagerSkill();
 
         process.stdout.write(`  ${chalk.green("✓")} Imported ${mcpCount} MCPs\n`);
         for (const doc of providerDocs) {
           process.stdout.write(`  ${chalk.green("✓")} Imported ${doc} instructions → providers/${doc}.md\n`);
         }
-        process.stdout.write(`  ${chalk.green("✓")} Created rig.yaml\n`);
-        process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
-        process.stdout.write(`\n  Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Created jato.yaml\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
+        process.stdout.write(`\n  Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.\n`);
         return;
       }
 
       if (opts.template) {
         const name = opts.name ?? opts.template;
-        const rigDir = getRigDir(name);
-        await mkdir(rigDir, { recursive: true });
-        await copyTemplate(opts.template, rigDir, name);
-        await installRigManagerSkill();
+        const jatoDir = getJatoDir(name);
+        await mkdir(jatoDir, { recursive: true });
+        await copyTemplate(opts.template, jatoDir, name);
+        await installJatoManagerSkill();
 
-        process.stdout.write(`  ${chalk.green("✓")} Created rig from template '${opts.template}'\n`);
-        process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
-        process.stdout.write(`\n  Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Created jato from template '${opts.template}'\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
+        process.stdout.write(`\n  Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.\n`);
         return;
       }
 
       if (opts.empty || opts.name) {
         const name = opts.name ?? "default";
-        await createEmptyRig(name);
-        await installRigManagerSkill();
+        await createEmptyJato(name);
+        await installJatoManagerSkill();
 
-        process.stdout.write(`  ${chalk.green("✓")} Created empty rig '${name}'\n`);
-        process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
-        process.stdout.write(`\n  Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Created empty jato '${name}'\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
+        process.stdout.write(`\n  Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.\n`);
         return;
       }
 
       // Interactive mode
       const clack = await import("@clack/prompts");
 
-      clack.intro("rig init");
+      clack.intro("jato init");
 
       const detected = await detectInstalledProviders();
       const foundProviders = detected.filter((d) => d.found);
@@ -210,7 +210,7 @@ export function registerInitCommand(program: Command): void {
             ? [{ value: "import" as const, label: `Import from my current tools (detected: ${foundProviders.map((p) => p.name).join(", ")})` }]
             : []),
           { value: "template" as const, label: "Start from a template" },
-          { value: "empty" as const, label: "Empty rig (I'll configure it myself)" },
+          { value: "empty" as const, label: "Empty jato (I'll configure it myself)" },
         ],
       });
 
@@ -221,7 +221,7 @@ export function registerInitCommand(program: Command): void {
 
       if (mode === "import") {
         const name = await clack.text({
-          message: "Name for your new rig:",
+          message: "Name for your new jato:",
           placeholder: "main",
           defaultValue: "main",
           validate: (v) => (v.length === 0 ? "Name is required" : undefined),
@@ -233,16 +233,16 @@ export function registerInitCommand(program: Command): void {
 
         const providerNames = foundProviders.map((p) => p.name);
         const { mcpCount, providerDocs } = await createFromImport(providerNames, name);
-        await installRigManagerSkill();
+        await installJatoManagerSkill();
 
         process.stdout.write(`\n  ${chalk.green("✓")} Imported ${mcpCount} MCPs\n`);
         for (const doc of providerDocs) {
           process.stdout.write(`  ${chalk.green("✓")} Imported ${doc} instructions → providers/${doc}.md\n`);
         }
-        process.stdout.write(`  ${chalk.green("✓")} Created rig.yaml\n`);
-        process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Created jato.yaml\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
 
-        clack.outro(`Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.`);
+        clack.outro(`Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.`);
         return;
       }
 
@@ -261,7 +261,7 @@ export function registerInitCommand(program: Command): void {
         }
 
         const name = await clack.text({
-          message: "Name for your new rig:",
+          message: "Name for your new jato:",
           placeholder: templateName,
           defaultValue: templateName,
           validate: (v) => (v.length === 0 ? "Name is required" : undefined),
@@ -271,21 +271,21 @@ export function registerInitCommand(program: Command): void {
           process.exit(0);
         }
 
-        const rigDir = getRigDir(name);
-        await mkdir(rigDir, { recursive: true });
-        await copyTemplate(templateName, rigDir, name);
-        await installRigManagerSkill();
+        const jatoDir = getJatoDir(name);
+        await mkdir(jatoDir, { recursive: true });
+        await copyTemplate(templateName, jatoDir, name);
+        await installJatoManagerSkill();
 
-        process.stdout.write(`\n  ${chalk.green("✓")} Created rig from template '${templateName}'\n`);
-        process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
+        process.stdout.write(`\n  ${chalk.green("✓")} Created jato from template '${templateName}'\n`);
+        process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
 
-        clack.outro(`Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.`);
+        clack.outro(`Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.`);
         return;
       }
 
-      // Empty rig
+      // Empty jato
       const name = await clack.text({
-        message: "Name for your new rig:",
+        message: "Name for your new jato:",
         placeholder: "default",
         defaultValue: "default",
         validate: (v) => (v.length === 0 ? "Name is required" : undefined),
@@ -295,12 +295,12 @@ export function registerInitCommand(program: Command): void {
         process.exit(0);
       }
 
-      await createEmptyRig(name);
-      await installRigManagerSkill();
+      await createEmptyJato(name);
+      await installJatoManagerSkill();
 
-      process.stdout.write(`\n  ${chalk.green("✓")} Created empty rig '${name}'\n`);
-      process.stdout.write(`  ${chalk.green("✓")} Installed rig-manager skill\n`);
+      process.stdout.write(`\n  ${chalk.green("✓")} Created empty jato '${name}'\n`);
+      process.stdout.write(`  ${chalk.green("✓")} Installed jato-manager skill\n`);
 
-      clack.outro(`Rig '${name}' created. Run ${chalk.cyan(`rig use ${name}`)} to activate.`);
+      clack.outro(`Jato '${name}' created. Run ${chalk.cyan(`jato use ${name}`)} to activate.`);
     });
 }

@@ -18,14 +18,14 @@ export async function listTemplates(): Promise<TemplateInfo[]> {
 
     try {
       const { parse: parseYaml } = await import("yaml");
-      const raw = await readFile(join(__dirname, entry.name, "rig.yaml"), "utf8");
+      const raw = await readFile(join(__dirname, entry.name, "jato.yaml"), "utf8");
       const manifest = parseYaml(raw);
       templates.push({
         name: entry.name,
         description: manifest.description ?? "",
       });
     } catch {
-      // Skip directories without valid rig.yaml
+      // Skip directories without valid jato.yaml
     }
   }
 
@@ -39,17 +39,17 @@ export function getTemplatePath(templateName: string): string {
 export async function copyTemplate(
   templateName: string,
   destDir: string,
-  rigName: string,
+  jatoName: string,
 ): Promise<void> {
   const srcDir = getTemplatePath(templateName);
 
   await cp(srcDir, destDir, { recursive: true });
 
-  // Update the name in rig.yaml
+  // Update the name in jato.yaml
   const { parse: parseYaml, stringify: stringifyYaml } = await import("yaml");
-  const rigYamlPath = join(destDir, "rig.yaml");
-  const raw = await readFile(rigYamlPath, "utf8");
+  const jatoYamlPath = join(destDir, "jato.yaml");
+  const raw = await readFile(jatoYamlPath, "utf8");
   const manifest = parseYaml(raw);
-  manifest.name = rigName;
-  await writeFile(rigYamlPath, stringifyYaml(manifest), "utf8");
+  manifest.name = jatoName;
+  await writeFile(jatoYamlPath, stringifyYaml(manifest), "utf8");
 }

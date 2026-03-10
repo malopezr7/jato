@@ -1,4 +1,4 @@
-import type { McpServer, RigManifest } from "../core/schema.js";
+import type { McpServer, JatoManifest } from "../core/schema.js";
 
 export interface ImportResult {
   providers: Record<string, boolean>;

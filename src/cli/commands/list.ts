@@ -1,18 +1,18 @@
 import type { Command } from "commander";
 import chalk from "chalk";
-import { listRigs, getActiveRig } from "../../core/hub.js";
-import { loadRig } from "../../core/rig.js";
+import { listJatos, getActiveJato } from "../../core/hub.js";
+import { loadJato } from "../../core/jato.js";
 
 export function registerListCommand(program: Command): void {
   program
     .command("list")
     .description("List all available rigs")
     .action(async () => {
-      const rigs = await listRigs();
-      const active = await getActiveRig();
+      const rigs = await listJatos();
+      const active = await getActiveJato();
 
       if (rigs.length === 0) {
-        process.stdout.write("  No rigs found. Run `rig init` to create one.\n");
+        process.stdout.write("  No jatos found. Run `jato init` to create one.\n");
         return;
       }
 
@@ -20,7 +20,7 @@ export function registerListCommand(program: Command): void {
       for (const name of rigs) {
         let description = "";
         try {
-          const rig = await loadRig(name);
+          const rig = await loadJato(name);
           description = rig.manifest.description ?? "";
         } catch {
           // Skip invalid rigs

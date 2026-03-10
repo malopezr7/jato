@@ -24,29 +24,29 @@ async function createRig(name: string, manifest: Record<string, unknown>, extras
   providerDocs?: Record<string, string>;
   skills?: Record<string, string>;
 }) {
-  const rigDir = join(tmpHome, ".rig", "rigs", name);
-  await mkdir(join(rigDir, "providers"), { recursive: true });
-  await mkdir(join(rigDir, "skills"), { recursive: true });
-  await mkdir(join(rigDir, "agents"), { recursive: true });
-  await writeFile(join(rigDir, "rig.yaml"), stringifyYaml(manifest));
+  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+  await mkdir(join(jatoDir, "providers"), { recursive: true });
+  await mkdir(join(jatoDir, "skills"), { recursive: true });
+  await mkdir(join(jatoDir, "agents"), { recursive: true });
+  await writeFile(join(jatoDir, "jato.yaml"), stringifyYaml(manifest));
 
   if (extras?.instructions) {
-    await writeFile(join(rigDir, "instructions.md"), extras.instructions);
+    await writeFile(join(jatoDir, "instructions.md"), extras.instructions);
   }
   if (extras?.providerDocs) {
     for (const [pname, content] of Object.entries(extras.providerDocs)) {
-      await writeFile(join(rigDir, "providers", `${pname}.md`), content);
+      await writeFile(join(jatoDir, "providers", `${pname}.md`), content);
     }
   }
   if (extras?.skills) {
     for (const [sname, content] of Object.entries(extras.skills)) {
-      await writeFile(join(rigDir, "skills", `${sname}.md`), content);
+      await writeFile(join(jatoDir, "skills", `${sname}.md`), content);
     }
   }
 }
 
 describe("materialize", () => {
-  it("materializes a rig with claude provider", async () => {
+  it("materializes a jato with claude provider", async () => {
     await createRig("test", {
       name: "test",
       providers: { claude: true },
@@ -59,7 +59,7 @@ describe("materialize", () => {
 
     const result = await materialize("test", { home: tmpHome, targetRoot: tmpTarget });
 
-    expect(result.rigName).toBe("test");
+    expect(result.jatoName).toBe("test");
     expect(result.filesWritten.length).toBeGreaterThan(0);
 
     // Check settings.json was written
@@ -74,17 +74,17 @@ describe("materialize", () => {
     const claudeContent = await readFile(claudeMd, "utf8");
     expect(claudeContent).toContain("Be helpful");
 
-    // Check rig-context skill was installed
-    const contextSkill = join(tmpHome, ".claude", "skills", "rig-context", "SKILL.md");
+    // Check jato-context skill was installed
+    const contextSkill = join(tmpHome, ".claude", "skills", "jato-context", "SKILL.md");
     expect(existsSync(contextSkill)).toBe(true);
     const contextContent = await readFile(contextSkill, "utf8");
-    expect(contextContent).toContain("Active Rig: test");
+    expect(contextContent).toContain("Active Jato: test");
 
-    // Check rig-manager skill was installed
-    const managerSkill = join(tmpHome, ".claude", "skills", "rig-manager", "SKILL.md");
+    // Check jato-manager skill was installed
+    const managerSkill = join(tmpHome, ".claude", "skills", "jato-manager", "SKILL.md");
     expect(existsSync(managerSkill)).toBe(true);
     const managerContent = await readFile(managerSkill, "utf8");
-    expect(managerContent).toContain("rig — Manager Skill");
+    expect(managerContent).toContain("jato — Manager Skill");
   });
 
   it("updates global config with active rig", async () => {
@@ -95,7 +95,7 @@ describe("materialize", () => {
 
     await materialize("myrig", { home: tmpHome, targetRoot: tmpTarget });
 
-    const configPath = join(tmpHome, ".rig", "config.yaml");
+    const configPath = join(tmpHome, ".jato", "config.yaml");
     const configContent = await readFile(configPath, "utf8");
     expect(configContent).toContain("myrig");
   });
@@ -118,6 +118,6 @@ describe("materialize", () => {
   it("throws for nonexistent rig", async () => {
     await expect(
       materialize("nonexistent", { home: tmpHome })
-    ).rejects.toThrow("Rig 'nonexistent' not found");
+    ).rejects.toThrow("Jato 'nonexistent' not found");
   });
 });

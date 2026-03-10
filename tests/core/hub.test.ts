@@ -4,14 +4,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   getHubDir,
-  getRigsDir,
+  getJatosDir,
   getSkillsDir,
-  getRigDir,
+  getJatoDir,
   ensureHub,
   readGlobalConfig,
   writeGlobalConfig,
-  getActiveRig,
-  listRigs,
+  getActiveJato,
+  listJatos,
 } from "../../src/core/hub.js";
 
 let tmpHome: string;
@@ -26,19 +26,19 @@ afterEach(async () => {
 
 describe("path helpers", () => {
   it("returns correct hub dir", () => {
-    expect(getHubDir("/fake")).toBe("/fake/.rig");
+    expect(getHubDir("/fake")).toBe("/fake/.jato");
   });
 
   it("returns correct rigs dir", () => {
-    expect(getRigsDir("/fake")).toBe("/fake/.rig/rigs");
+    expect(getJatosDir("/fake")).toBe("/fake/.jato/rigs");
   });
 
   it("returns correct skills dir", () => {
-    expect(getSkillsDir("/fake")).toBe("/fake/.rig/skills");
+    expect(getSkillsDir("/fake")).toBe("/fake/.jato/skills");
   });
 
   it("returns correct rig dir for a named rig", () => {
-    expect(getRigDir("mobile", "/fake")).toBe("/fake/.rig/rigs/mobile");
+    expect(getJatoDir("mobile", "/fake")).toBe("/fake/.jato/rigs/mobile");
   });
 });
 
@@ -46,9 +46,9 @@ describe("ensureHub", () => {
   it("creates hub directories", async () => {
     await ensureHub(tmpHome);
     const { existsSync } = await import("node:fs");
-    expect(existsSync(join(tmpHome, ".rig"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "rigs"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "skills"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "skills"))).toBe(true);
   });
 
   it("is idempotent", async () => {
@@ -64,37 +64,37 @@ describe("global config", () => {
   });
 
   it("writes and reads config", async () => {
-    await writeGlobalConfig({ active_rig: "mobile" }, tmpHome);
+    await writeGlobalConfig({ active_jato: "mobile" }, tmpHome);
     const config = await readGlobalConfig(tmpHome);
-    expect(config.active_rig).toBe("mobile");
+    expect(config.active_jato).toBe("mobile");
   });
 
   it("reads active rig", async () => {
-    await writeGlobalConfig({ active_rig: "backend" }, tmpHome);
-    const active = await getActiveRig(tmpHome);
+    await writeGlobalConfig({ active_jato: "backend" }, tmpHome);
+    const active = await getActiveJato(tmpHome);
     expect(active).toBe("backend");
   });
 
   it("returns undefined when no active rig", async () => {
-    const active = await getActiveRig(tmpHome);
+    const active = await getActiveJato(tmpHome);
     expect(active).toBeUndefined();
   });
 });
 
-describe("listRigs", () => {
+describe("listJatos", () => {
   it("returns empty array when no rigs", async () => {
-    const rigs = await listRigs(tmpHome);
+    const rigs = await listJatos(tmpHome);
     expect(rigs).toEqual([]);
   });
 
   it("lists rig directories", async () => {
     await ensureHub(tmpHome);
-    await mkdir(join(tmpHome, ".rig", "rigs", "mobile"), { recursive: true });
-    await mkdir(join(tmpHome, ".rig", "rigs", "backend"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "rigs", "mobile"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "rigs", "backend"), { recursive: true });
     // Create a file to ensure it's filtered out
-    await writeFile(join(tmpHome, ".rig", "rigs", ".DS_Store"), "");
+    await writeFile(join(tmpHome, ".jato", "rigs", ".DS_Store"), "");
 
-    const rigs = await listRigs(tmpHome);
+    const rigs = await listJatos(tmpHome);
     expect(rigs.sort()).toEqual(["backend", "mobile"]);
   });
 });

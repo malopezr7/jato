@@ -1,4 +1,4 @@
-import type { ResolvedRig } from "../core/rig.js";
+import type { ResolvedJato } from "../core/jato.js";
 
 export interface FileOutput {
   path: string;
@@ -14,5 +14,5 @@ export interface Provider {
   configPath(home?: string): string;
   skillsDir(home?: string): string;
   instructionsFileName: string;
-  materialize(rig: ResolvedRig, home?: string): MaterializeResult;
+  materialize(rig: ResolvedJato, home?: string): MaterializeResult;
 }

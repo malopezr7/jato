@@ -4,18 +4,18 @@ import { homedir } from "node:os";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 
 export interface GlobalConfig {
-  active_rig?: string;
+  active_jato?: string;
 }
 
 export function getHubDir(home?: string): string {
-  return join(home ?? homedir(), ".rig");
+  return join(home ?? homedir(), ".jato");
 }
 
 export function getConfigPath(home?: string): string {
   return join(getHubDir(home), "config.yaml");
 }
 
-export function getRigsDir(home?: string): string {
+export function getJatosDir(home?: string): string {
   return join(getHubDir(home), "rigs");
 }
 
@@ -23,8 +23,8 @@ export function getSkillsDir(home?: string): string {
   return join(getHubDir(home), "skills");
 }
 
-export function getRigDir(rigName: string, home?: string): string {
-  return join(getRigsDir(home), rigName);
+export function getJatoDir(jatoName: string, home?: string): string {
+  return join(getJatosDir(home), jatoName);
 }
 
 export async function ensureHub(home?: string): Promise<void> {
@@ -52,14 +52,14 @@ export async function writeGlobalConfig(
   await writeFile(getConfigPath(home), stringifyYaml(config), "utf8");
 }
 
-export async function getActiveRig(home?: string): Promise<string | undefined> {
+export async function getActiveJato(home?: string): Promise<string | undefined> {
   const config = await readGlobalConfig(home);
-  return config.active_rig;
+  return config.active_jato;
 }
 
-export async function listRigs(home?: string): Promise<string[]> {
+export async function listJatos(home?: string): Promise<string[]> {
   try {
-    const entries = await readdir(getRigsDir(home), { withFileTypes: true });
+    const entries = await readdir(getJatosDir(home), { withFileTypes: true });
     return entries.filter((e) => e.isDirectory()).map((e) => e.name);
   } catch {
     return [];

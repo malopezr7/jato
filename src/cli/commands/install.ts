@@ -5,17 +5,17 @@ import { tmpdir } from "node:os";
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import chalk from "chalk";
-import { ensureHub, getRigsDir, getRigDir } from "../../core/hub.js";
+import { ensureHub, getJatosDir, getJatoDir } from "../../core/hub.js";
 
 export function registerInstallCommand(program: Command): void {
   program
     .command("install <repo-url>")
-    .description("Install rigs from a git repository")
-    .option("--rig <name>", "Install only a specific rig from the repo")
-    .action(async (repoUrl: string, opts: { rig?: string }) => {
+    .description("Install jatos from a git repository")
+    .option("--jato <name>", "Install only a specific jato from the repo")
+    .action(async (repoUrl: string, opts: { jato?: string }) => {
       await ensureHub();
 
-      const tmpDir = await mkdtemp(join(tmpdir(), "rig-install-"));
+      const tmpDir = await mkdtemp(join(tmpdir(), "jato-install-"));
 
       try {
         // Normalize URL
@@ -35,48 +35,48 @@ export function registerInstallCommand(program: Command): void {
         const repoDir = join(tmpDir, "repo");
 
         // Find rigs in the repo
-        // Look for directories with rig.yaml
-        const rigsDir = existsSync(join(repoDir, "rigs"))
+        // Look for directories with jato.yaml
+        const jatosDir = existsSync(join(repoDir, "rigs"))
           ? join(repoDir, "rigs")
           : repoDir;
 
-        const entries = await readdir(rigsDir, { withFileTypes: true });
-        const rigDirs = entries.filter(
-          (e) => e.isDirectory() && existsSync(join(rigsDir, e.name, "rig.yaml")),
+        const entries = await readdir(jatosDir, { withFileTypes: true });
+        const jatoDirs = entries.filter(
+          (e) => e.isDirectory() && existsSync(join(jatosDir, e.name, "jato.yaml")),
         );
 
-        if (rigDirs.length === 0) {
-          // Check if the repo root itself is a rig
-          if (existsSync(join(repoDir, "rig.yaml"))) {
-            const name = opts.rig ?? "imported";
-            const destDir = getRigDir(name);
+        if (jatoDirs.length === 0) {
+          // Check if the repo root itself is a jato
+          if (existsSync(join(repoDir, "jato.yaml"))) {
+            const name = opts.jato ?? "imported";
+            const destDir = getJatoDir(name);
             await cp(repoDir, destDir, {
               recursive: true,
               filter: (src) => !src.includes(".git"),
             });
-            process.stdout.write(`  ${chalk.green("✓")} Installed rig '${name}'\n`);
+            process.stdout.write(`  ${chalk.green("✓")} Installed jato '${name}'\n`);
             return;
           }
-          process.stderr.write("  No rigs found in repository.\n");
+          process.stderr.write("  No jatos found in repository.\n");
           process.exit(1);
         }
 
-        if (opts.rig) {
-          const match = rigDirs.find((d) => d.name === opts.rig);
+        if (opts.jato) {
+          const match = jatoDirs.find((d) => d.name === opts.jato);
           if (!match) {
-            process.stderr.write(`  Rig '${opts.rig}' not found in repository.\n`);
-            process.stderr.write(`  Available: ${rigDirs.map((d) => d.name).join(", ")}\n`);
+            process.stderr.write(`  Jato '${opts.jato}' not found in repository.\n`);
+            process.stderr.write(`  Available: ${jatoDirs.map((d) => d.name).join(", ")}\n`);
             process.exit(1);
           }
 
-          const destDir = getRigDir(opts.rig);
-          await cp(join(rigsDir, opts.rig), destDir, { recursive: true });
-          process.stdout.write(`  ${chalk.green("✓")} Installed rig '${opts.rig}'\n`);
+          const destDir = getJatoDir(opts.jato);
+          await cp(join(jatosDir, opts.jato), destDir, { recursive: true });
+          process.stdout.write(`  ${chalk.green("✓")} Installed jato '${opts.jato}'\n`);
         } else {
-          for (const rigDir of rigDirs) {
-            const destDir = getRigDir(rigDir.name);
-            await cp(join(rigsDir, rigDir.name), destDir, { recursive: true });
-            process.stdout.write(`  ${chalk.green("✓")} Installed rig '${rigDir.name}'\n`);
+          for (const jatoDir of jatoDirs) {
+            const destDir = getJatoDir(jatoDir.name);
+            await cp(join(jatosDir, jatoDir.name), destDir, { recursive: true });
+            process.stdout.write(`  ${chalk.green("✓")} Installed jato '${jatoDir.name}'\n`);
           }
         }
       } finally {

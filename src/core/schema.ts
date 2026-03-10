@@ -12,7 +12,7 @@ export const mcpServerSchema = z.object({
 
 export type McpServer = z.infer<typeof mcpServerSchema>;
 
-export const rigManifestSchema = z.object({
+export const jatoManifestSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
 
@@ -27,8 +27,8 @@ export const rigManifestSchema = z.object({
     .default({ auto_execute: false }),
 });
 
-export type RigManifest = z.infer<typeof rigManifestSchema>;
+export type JatoManifest = z.infer<typeof jatoManifestSchema>;
 
-export function parseRigManifest(data: unknown): RigManifest {
-  return rigManifestSchema.parse(data);
+export function parseJatoManifest(data: unknown): JatoManifest {
+  return jatoManifestSchema.parse(data);
 }

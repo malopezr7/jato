@@ -2,8 +2,8 @@ import type { Command } from "commander";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import chalk from "chalk";
-import { getHubDir, getActiveRig, getRigDir, getSkillsDir } from "../../core/hub.js";
-import { loadRig } from "../../core/rig.js";
+import { getHubDir, getActiveJato, getJatoDir, getSkillsDir } from "../../core/hub.js";
+import { loadJato } from "../../core/jato.js";
 import { getProvider } from "../../providers/registry.js";
 import { detectInstalledProviders } from "../../providers/detector.js";
 
@@ -16,14 +16,14 @@ interface CheckResult {
 export function registerDoctorCommand(program: Command): void {
   program
     .command("doctor")
-    .description("Check health of rig setup")
+    .description("Check health of jato setup")
     .action(async () => {
       const checks: CheckResult[] = [];
 
       // Check 1: Hub exists
       const hubExists = existsSync(getHubDir());
       checks.push({
-        label: "Hub directory (~/.rig/) exists",
+        label: "Hub directory (~/.jato/) exists",
         ok: hubExists,
       });
 
@@ -33,14 +33,14 @@ export function registerDoctorCommand(program: Command): void {
       }
 
       // Check 2: Active rig
-      const activeRigName = await getActiveRig();
+      const activeJatoName = await getActiveJato();
       checks.push({
-        label: "Active rig is set",
-        ok: !!activeRigName,
-        detail: activeRigName ? `active_rig: ${activeRigName}` : "No active rig",
+        label: "Active jato is set",
+        ok: !!activeJatoName,
+        detail: activeJatoName ? `active_jato: ${activeJatoName}` : "No active jato",
       });
 
-      if (!activeRigName) {
+      if (!activeJatoName) {
         printChecks(checks);
         return;
       }
@@ -48,10 +48,10 @@ export function registerDoctorCommand(program: Command): void {
       // Check 3: Rig is valid
       let rigValid = false;
       try {
-        const rig = await loadRig(activeRigName);
+        const rig = await loadJato(activeJatoName);
         rigValid = true;
         checks.push({
-          label: `Rig '${activeRigName}' has valid rig.yaml`,
+          label: `Jato '${activeJatoName}' has valid jato.yaml`,
           ok: true,
         });
 
@@ -104,28 +104,28 @@ export function registerDoctorCommand(program: Command): void {
             detail: provider.configPath(),
           });
 
-          const contextSkillPath = join(provider.skillsDir(), "rig-context", "SKILL.md");
+          const contextSkillPath = join(provider.skillsDir(), "jato-context", "SKILL.md");
           checks.push({
-            label: `Rig context skill for ${providerName}`,
+            label: `Jato context skill for ${providerName}`,
             ok: existsSync(contextSkillPath),
           });
 
-          const managerSkillPath = join(provider.skillsDir(), "rig-manager", "SKILL.md");
+          const managerSkillPath = join(provider.skillsDir(), "jato-manager", "SKILL.md");
           checks.push({
-            label: `Rig manager skill for ${providerName}`,
+            label: `Jato manager skill for ${providerName}`,
             ok: existsSync(managerSkillPath),
           });
         }
 
         // Check 7: Meta-skill installed
-        const metaSkillPath = join(getSkillsDir(), "rig-manager.md");
+        const metaSkillPath = join(getSkillsDir(), "jato-manager.md");
         checks.push({
-          label: "Meta-skill rig-manager.md installed in hub",
+          label: "Meta-skill jato-manager.md installed in hub",
           ok: existsSync(metaSkillPath),
         });
       } catch (err: unknown) {
         checks.push({
-          label: `Rig '${activeRigName}' has valid rig.yaml`,
+          label: `Jato '${activeJatoName}' has valid jato.yaml`,
           ok: false,
           detail: err instanceof Error ? err.message : "Invalid manifest",
         });
@@ -136,7 +136,7 @@ export function registerDoctorCommand(program: Command): void {
 }
 
 function printChecks(checks: CheckResult[]): void {
-  process.stdout.write("\n  rig doctor\n\n");
+  process.stdout.write("\n  jato doctor\n\n");
 
   for (const check of checks) {
     const icon = check.ok ? chalk.green("✓") : chalk.red("✗");

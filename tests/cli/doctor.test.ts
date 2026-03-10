@@ -24,25 +24,25 @@ function runCli(args: string): string {
   });
 }
 
-describe("rig doctor", () => {
+describe("jato doctor", () => {
   it("detects missing hub", () => {
     const output = runCli("doctor");
-    expect(output).toContain("rig doctor");
+    expect(output).toContain("jato doctor");
     expect(output).toContain("Hub directory");
   });
 
   it("runs full checks when hub and rig exist", async () => {
     // Create hub with active rig
-    await mkdir(join(tmpHome, ".rig", "rigs", "test", "providers"), { recursive: true });
-    await mkdir(join(tmpHome, ".rig", "rigs", "test", "skills"), { recursive: true });
-    await mkdir(join(tmpHome, ".rig", "rigs", "test", "agents"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "rigs", "test", "providers"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "rigs", "test", "skills"), { recursive: true });
+    await mkdir(join(tmpHome, ".jato", "rigs", "test", "agents"), { recursive: true });
 
     await writeFile(
-      join(tmpHome, ".rig", "config.yaml"),
-      stringifyYaml({ active_rig: "test" }),
+      join(tmpHome, ".jato", "config.yaml"),
+      stringifyYaml({ active_jato: "test" }),
     );
     await writeFile(
-      join(tmpHome, ".rig", "rigs", "test", "rig.yaml"),
+      join(tmpHome, ".jato", "rigs", "test", "jato.yaml"),
       stringifyYaml({
         name: "test",
         providers: { claude: true },
@@ -51,7 +51,7 @@ describe("rig doctor", () => {
     );
 
     const output = runCli("doctor");
-    expect(output).toContain("rig doctor");
+    expect(output).toContain("jato doctor");
     expect(output).toContain("checks passed");
   });
 });

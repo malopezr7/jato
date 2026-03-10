@@ -1,8 +1,8 @@
 import { readFile, readdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { parseRigManifest, type RigManifest } from "./schema.js";
-import { getRigDir } from "./hub.js";
+import { parseJatoManifest, type JatoManifest } from "./schema.js";
+import { getJatoDir } from "./hub.js";
 
 export interface SkillInfo {
   name: string;
@@ -14,8 +14,8 @@ export interface AgentInfo {
   path: string;
 }
 
-export interface ResolvedRig {
-  manifest: RigManifest;
+export interface ResolvedJato {
+  manifest: JatoManifest;
   dir: string;
   instructions?: string;
   providerDocs: Record<string, string>;
@@ -54,17 +54,17 @@ async function listMdFiles(dir: string): Promise<{ name: string; path: string }[
   }
 }
 
-export async function loadRig(name: string, home?: string): Promise<ResolvedRig> {
-  const dir = getRigDir(name, home);
-  const manifestPath = join(dir, "rig.yaml");
+export async function loadJato(name: string, home?: string): Promise<ResolvedJato> {
+  const dir = getJatoDir(name, home);
+  const manifestPath = join(dir, "jato.yaml");
 
   if (!(await fileExists(manifestPath))) {
-    throw new Error(`Rig '${name}' not found: ${manifestPath} does not exist`);
+    throw new Error(`Jato '${name}' not found: ${manifestPath} does not exist`);
   }
 
   const raw = await readFile(manifestPath, "utf8");
   const parsed = parseYaml(raw);
-  const manifest = parseRigManifest(parsed);
+  const manifest = parseJatoManifest(parsed);
 
   const instructions = await readOptionalFile(join(dir, "instructions.md"));
 

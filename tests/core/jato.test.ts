@@ -3,7 +3,7 @@ import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { stringify as stringifyYaml } from "yaml";
-import { loadRig } from "../../src/core/rig.js";
+import { loadJato } from "../../src/core/jato.js";
 
 let tmpHome: string;
 
@@ -21,36 +21,36 @@ async function createRig(name: string, manifest: Record<string, unknown>, extras
   skills?: Record<string, string>;
   agents?: Record<string, string>;
 }) {
-  const rigDir = join(tmpHome, ".rig", "rigs", name);
-  await mkdir(join(rigDir, "providers"), { recursive: true });
-  await mkdir(join(rigDir, "skills"), { recursive: true });
-  await mkdir(join(rigDir, "agents"), { recursive: true });
-  await writeFile(join(rigDir, "rig.yaml"), stringifyYaml(manifest));
+  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+  await mkdir(join(jatoDir, "providers"), { recursive: true });
+  await mkdir(join(jatoDir, "skills"), { recursive: true });
+  await mkdir(join(jatoDir, "agents"), { recursive: true });
+  await writeFile(join(jatoDir, "jato.yaml"), stringifyYaml(manifest));
 
   if (extras?.instructions) {
-    await writeFile(join(rigDir, "instructions.md"), extras.instructions);
+    await writeFile(join(jatoDir, "instructions.md"), extras.instructions);
   }
   if (extras?.providerDocs) {
     for (const [name, content] of Object.entries(extras.providerDocs)) {
-      await writeFile(join(rigDir, "providers", `${name}.md`), content);
+      await writeFile(join(jatoDir, "providers", `${name}.md`), content);
     }
   }
   if (extras?.skills) {
     for (const [name, content] of Object.entries(extras.skills)) {
-      await writeFile(join(rigDir, "skills", `${name}.md`), content);
+      await writeFile(join(jatoDir, "skills", `${name}.md`), content);
     }
   }
   if (extras?.agents) {
     for (const [name, content] of Object.entries(extras.agents)) {
-      await writeFile(join(rigDir, "agents", `${name}.md`), content);
+      await writeFile(join(jatoDir, "agents", `${name}.md`), content);
     }
   }
 }
 
-describe("loadRig", () => {
+describe("loadJato", () => {
   it("loads a minimal rig", async () => {
     await createRig("test", { name: "test" });
-    const rig = await loadRig("test", tmpHome);
+    const rig = await loadJato("test", tmpHome);
 
     expect(rig.manifest.name).toBe("test");
     expect(rig.instructions).toBeUndefined();
@@ -80,7 +80,7 @@ describe("loadRig", () => {
       },
     });
 
-    const rig = await loadRig("mobile", tmpHome);
+    const rig = await loadJato("mobile", tmpHome);
 
     expect(rig.manifest.name).toBe("mobile");
     expect(rig.manifest.providers).toEqual({ claude: true, codex: true });
@@ -95,16 +95,16 @@ describe("loadRig", () => {
   });
 
   it("throws when rig does not exist", async () => {
-    await expect(loadRig("nonexistent", tmpHome)).rejects.toThrow(
-      "Rig 'nonexistent' not found"
+    await expect(loadJato("nonexistent", tmpHome)).rejects.toThrow(
+      "Jato 'nonexistent' not found"
     );
   });
 
   it("throws on invalid manifest", async () => {
-    const rigDir = join(tmpHome, ".rig", "rigs", "bad");
-    await mkdir(rigDir, { recursive: true });
-    await writeFile(join(rigDir, "rig.yaml"), stringifyYaml({ description: "no name" }));
+    const jatoDir = join(tmpHome, ".jato", "rigs", "bad");
+    await mkdir(jatoDir, { recursive: true });
+    await writeFile(join(jatoDir, "jato.yaml"), stringifyYaml({ description: "no name" }));
 
-    await expect(loadRig("bad", tmpHome)).rejects.toThrow();
+    await expect(loadJato("bad", tmpHome)).rejects.toThrow();
   });
 });

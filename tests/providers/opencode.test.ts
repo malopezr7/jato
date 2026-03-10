@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { opencodeProvider } from "../../src/providers/opencode.js";
-import type { ResolvedRig } from "../../src/core/rig.js";
+import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
+function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/fake/.rig/rigs/test",
+    dir: "/fake/.jato/rigs/test",
     providerDocs: {},
     skills: [],
     agents: [],

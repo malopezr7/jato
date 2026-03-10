@@ -24,39 +24,39 @@ function runCli(args: string): string {
   });
 }
 
-describe("rig init --empty", () => {
+describe("jato init --empty", () => {
   it("creates an empty rig", () => {
     const output = runCli("init --empty --name test-rig --yes");
 
-    expect(output).toContain("Created empty rig");
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "test-rig", "rig.yaml"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "test-rig", "instructions.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "skills", "rig-manager.md"))).toBe(true);
+    expect(output).toContain("Created empty jato");
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "test-rig", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "test-rig", "instructions.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "skills", "jato-manager.md"))).toBe(true);
   });
 });
 
-describe("rig init --template", () => {
-  it("creates a rig from template", () => {
+describe("jato init --template", () => {
+  it("creates a jato from template", () => {
     const output = runCli("init --template starter --name my-starter --yes");
 
-    expect(output).toContain("Created rig from template");
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "my-starter", "rig.yaml"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "my-starter", "instructions.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "my-starter", "providers", "claude.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "my-starter", "skills", "code-review.md"))).toBe(true);
+    expect(output).toContain("Created jato from template");
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "instructions.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "providers", "claude.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-starter", "skills", "code-review.md"))).toBe(true);
   });
 
   it("updates rig name in manifest", async () => {
     runCli("init --template starter --name custom-name --yes");
 
     const { parse: parseYaml } = await import("yaml");
-    const raw = await readFile(join(tmpHome, ".rig", "rigs", "custom-name", "rig.yaml"), "utf8");
+    const raw = await readFile(join(tmpHome, ".jato", "rigs", "custom-name", "jato.yaml"), "utf8");
     const manifest = parseYaml(raw);
     expect(manifest.name).toBe("custom-name");
   });
 });
 
-describe("rig init --from", () => {
+describe("jato init --from", () => {
   it("imports from claude when config exists", async () => {
     // Create a fake claude config
     await mkdir(join(tmpHome, ".claude"), { recursive: true });
@@ -77,6 +77,6 @@ describe("rig init --from", () => {
     const output = runCli("init --from claude --name imported --yes");
 
     expect(output).toContain("Imported");
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "imported", "rig.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "imported", "jato.yaml"))).toBe(true);
   });
 });

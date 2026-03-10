@@ -1,14 +1,14 @@
-import type { ResolvedRig } from "../core/rig.js";
+import type { ResolvedJato } from "../core/jato.js";
 
-export function generateRigContextSkill(rig: ResolvedRig): string {
+export function generateJatoContextSkill(rig: ResolvedJato): string {
   const lines: string[] = [];
 
-  lines.push("# rig — Active Context");
+  lines.push("# jato — Active Context");
   lines.push("");
-  lines.push("You are working within a rig-managed environment.");
+  lines.push("You are working within a jato-managed environment.");
   lines.push("");
 
-  lines.push(`## Active Rig: ${rig.manifest.name}`);
+  lines.push(`## Active Jato: ${rig.manifest.name}`);
   if (rig.manifest.description) {
     lines.push(rig.manifest.description);
   }

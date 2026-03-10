@@ -18,7 +18,7 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name("rig")
+    .name("jato")
     .description("Centralized configuration manager for AI coding tools")
     .version("0.1.0");
 

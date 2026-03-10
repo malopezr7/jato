@@ -30,12 +30,12 @@ function runCli(args: string): string {
 }
 
 async function createRig(name: string) {
-  const rigDir = join(tmpHome, ".rig", "rigs", name);
-  await mkdir(join(rigDir, "providers"), { recursive: true });
-  await mkdir(join(rigDir, "skills"), { recursive: true });
-  await mkdir(join(rigDir, "agents"), { recursive: true });
+  const jatoDir = join(tmpHome, ".jato", "rigs", name);
+  await mkdir(join(jatoDir, "providers"), { recursive: true });
+  await mkdir(join(jatoDir, "skills"), { recursive: true });
+  await mkdir(join(jatoDir, "agents"), { recursive: true });
   await writeFile(
-    join(rigDir, "rig.yaml"),
+    join(jatoDir, "jato.yaml"),
     stringifyYaml({
       name,
       description: `${name} rig`,
@@ -43,25 +43,25 @@ async function createRig(name: string) {
       mcp_servers: [{ id: "github", command: "npx", args: ["-y", "server-github"] }],
     }),
   );
-  await writeFile(join(rigDir, "providers", "claude.md"), `# ${name} Claude docs`);
+  await writeFile(join(jatoDir, "providers", "claude.md"), `# ${name} Claude docs`);
 }
 
-describe("rig use", () => {
+describe("jato use", () => {
   it("shows no active rig when none set", () => {
     const output = runCli("use");
-    expect(output).toContain("No rig is currently active");
+    expect(output).toContain("No jato is currently active");
   });
 
-  it("activates a rig", async () => {
+  it("activates a jato", async () => {
     await createRig("test");
     const output = runCli("use test");
 
-    expect(output).toContain("Active rig: test");
+    expect(output).toContain("Active jato: test");
 
     // Check files were written
     expect(existsSync(join(tmpHome, ".claude", "settings.json"))).toBe(true);
     expect(existsSync(join(tmpTarget, "CLAUDE.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".claude", "skills", "rig-context", "SKILL.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".claude", "skills", "jato-context", "SKILL.md"))).toBe(true);
   });
 
   it("shows active rig after activation", async () => {

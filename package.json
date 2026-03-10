@@ -1,12 +1,12 @@
 {
-  "name": "rig",
+  "name": "jato",
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "rig": "dist/cli/index.js"
+    "jato": "dist/cli/index.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"const{cpSync}=require('fs');cpSync('src/skills/rig-manager.md','dist/skills/rig-manager.md');cpSync('src/templates','dist/templates',{recursive:true,filter:(s)=>!s.endsWith('.ts')})\"",
+    "build": "tsc && node -e \"const{cpSync}=require('fs');cpSync('src/skills/jato-manager.md','dist/skills/jato-manager.md');cpSync('src/templates','dist/templates',{recursive:true,filter:(s)=>!s.endsWith('.ts')})\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "pnpm dlx @biomejs/biome@latest check src tests"

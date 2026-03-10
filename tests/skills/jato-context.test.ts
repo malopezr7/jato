@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { generateRigContextSkill } from "../../src/skills/rig-context.js";
-import type { ResolvedRig } from "../../src/core/rig.js";
+import { generateJatoContextSkill } from "../../src/skills/jato-context.js";
+import type { ResolvedJato } from "../../src/core/jato.js";
 
-function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
+function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
   return {
     manifest: {
       name: "test",
@@ -10,7 +10,7 @@ function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
       mcp_servers: [],
       permissions: { auto_execute: false },
     },
-    dir: "/home/user/.rig/rigs/test",
+    dir: "/home/user/.jato/rigs/test",
     providerDocs: {},
     skills: [],
     agents: [],
@@ -18,16 +18,16 @@ function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
   };
 }
 
-describe("generateRigContextSkill", () => {
+describe("generateJatoContextSkill", () => {
   it("generates minimal context", () => {
-    const content = generateRigContextSkill(makeRig());
-    expect(content).toContain("# rig — Active Context");
-    expect(content).toContain("## Active Rig: test");
+    const content = generateJatoContextSkill(makeRig());
+    expect(content).toContain("# jato — Active Context");
+    expect(content).toContain("## Active Jato: test");
     expect(content).not.toContain("## Available Skills");
   });
 
   it("includes description", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
         manifest: {
           name: "mobile",
@@ -42,11 +42,11 @@ describe("generateRigContextSkill", () => {
   });
 
   it("lists skills", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
         skills: [
-          { name: "code-review", path: "/home/.rig/rigs/test/skills/code-review.md" },
-          { name: "testing", path: "/home/.rig/rigs/test/skills/testing.md" },
+          { name: "code-review", path: "/home/.jato/rigs/test/skills/code-review.md" },
+          { name: "testing", path: "/home/.jato/rigs/test/skills/testing.md" },
         ],
       })
     );
@@ -56,7 +56,7 @@ describe("generateRigContextSkill", () => {
   });
 
   it("lists MCP servers", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
         manifest: {
           name: "test",
@@ -81,7 +81,7 @@ describe("generateRigContextSkill", () => {
   });
 
   it("skips disabled MCP servers", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
         manifest: {
           name: "test",
@@ -104,7 +104,7 @@ describe("generateRigContextSkill", () => {
   });
 
   it("includes instructions", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({ instructions: "Always use TypeScript." })
     );
     expect(content).toContain("## Global Instructions");
@@ -112,9 +112,9 @@ describe("generateRigContextSkill", () => {
   });
 
   it("lists agents", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
-        agents: [{ name: "reviewer", path: "/home/.rig/rigs/test/agents/reviewer.md" }],
+        agents: [{ name: "reviewer", path: "/home/.jato/rigs/test/agents/reviewer.md" }],
       })
     );
     expect(content).toContain("## Agents");
@@ -122,7 +122,7 @@ describe("generateRigContextSkill", () => {
   });
 
   it("stays under 4KB for reasonable rigs", () => {
-    const content = generateRigContextSkill(
+    const content = generateJatoContextSkill(
       makeRig({
         manifest: {
           name: "mobile",

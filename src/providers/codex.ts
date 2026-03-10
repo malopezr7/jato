@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 import type { Provider, MaterializeResult } from "./types.js";
-import type { ResolvedRig } from "../core/rig.js";
+import type { ResolvedJato } from "../core/jato.js";
 import type { McpServer } from "../core/schema.js";
 
 function tomlString(value: string): string {
@@ -16,7 +16,7 @@ function tomlKey(key: string): string {
   return /^[a-zA-Z0-9_-]+$/.test(key) ? key : JSON.stringify(key);
 }
 
-function renderCodexConfig(rig: ResolvedRig): string {
+function renderCodexConfig(rig: ResolvedJato): string {
   const lines: string[] = [];
 
   lines.push(`approval_policy = ${tomlString(rig.manifest.permissions.auto_execute ? "auto-edit" : "on-request")}`);
@@ -62,7 +62,7 @@ export const codexProvider: Provider = {
 
   instructionsFileName: "AGENTS.md",
 
-  materialize(rig: ResolvedRig, home?: string): MaterializeResult {
+  materialize(rig: ResolvedJato, home?: string): MaterializeResult {
     const files: MaterializeResult["files"] = [];
 
     files.push({

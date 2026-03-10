@@ -1,13 +1,13 @@
 import type { Command } from "commander";
 import chalk from "chalk";
-import { getActiveRig, writeGlobalConfig } from "../../core/hub.js";
+import { getActiveJato, writeGlobalConfig } from "../../core/hub.js";
 
 export function registerOffCommand(program: Command): void {
   program
     .command("off")
-    .description("Deactivate the current rig")
+    .description("Deactivate the current jato")
     .action(async () => {
-      const active = await getActiveRig();
+      const active = await getActiveJato();
 
       if (!active) {
         process.stdout.write("  No rig is currently active.\n");

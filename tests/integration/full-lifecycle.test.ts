@@ -32,28 +32,28 @@ describe("full lifecycle: init → use → list → off", () => {
   it("completes the full lifecycle", async () => {
     // Step 1: Init with template
     const initOutput = runCli("init --template starter --name my-rig --yes");
-    expect(initOutput).toContain("Created rig from template");
+    expect(initOutput).toContain("Created jato from template");
 
     // Verify rig was created
-    expect(existsSync(join(tmpHome, ".rig", "rigs", "my-rig", "rig.yaml"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".rig", "skills", "rig-manager.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "rigs", "my-rig", "jato.yaml"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".jato", "skills", "jato-manager.md"))).toBe(true);
 
-    // Step 2: Use the rig
+    // Step 2: Use the jato
     const useOutput = runCli("use my-rig");
-    expect(useOutput).toContain("Active rig: my-rig");
+    expect(useOutput).toContain("Active jato: my-rig");
 
     // Verify materialized files
     expect(existsSync(join(tmpHome, ".claude", "settings.json"))).toBe(true);
     expect(existsSync(join(tmpTarget, "CLAUDE.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".claude", "skills", "rig-context", "SKILL.md"))).toBe(true);
-    expect(existsSync(join(tmpHome, ".claude", "skills", "rig-manager", "SKILL.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".claude", "skills", "jato-context", "SKILL.md"))).toBe(true);
+    expect(existsSync(join(tmpHome, ".claude", "skills", "jato-manager", "SKILL.md"))).toBe(true);
 
-    // Verify rig-context content
+    // Verify jato-context content
     const contextSkill = await readFile(
-      join(tmpHome, ".claude", "skills", "rig-context", "SKILL.md"),
+      join(tmpHome, ".claude", "skills", "jato-context", "SKILL.md"),
       "utf8",
     );
-    expect(contextSkill).toContain("Active Rig: my-rig");
+    expect(contextSkill).toContain("Active Jato: my-rig");
     expect(contextSkill).toContain("github");
 
     // Step 3: List rigs
@@ -71,9 +71,9 @@ describe("full lifecycle: init → use → list → off", () => {
 
     // Step 6: Verify deactivated
     const statusAfterOff = runCli("use");
-    expect(statusAfterOff).toContain("No rig is currently active");
+    expect(statusAfterOff).toContain("No jato is currently active");
 
-    // Step 7: List still shows the rig but not active
+    // Step 7: List still shows the jato but not active
     const listAfterOff = runCli("list");
     expect(listAfterOff).toContain("my-rig");
     expect(listAfterOff).not.toContain("[active]");

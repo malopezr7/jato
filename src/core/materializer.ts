@@ -1,10 +1,10 @@
 import { join } from "node:path";
 import { mkdir, readFile, writeFile as fsWriteFile } from "node:fs/promises";
-import { loadRig, type ResolvedRig } from "./rig.js";
+import { loadJato, type ResolvedJato } from "./jato.js";
 import { writeGlobalConfig, getSkillsDir } from "./hub.js";
 import { writeWithBackup, type BackupResult } from "./backup.js";
 import { getProvider } from "../providers/registry.js";
-import { generateRigContextSkill } from "../skills/rig-context.js";
+import { generateJatoContextSkill } from "../skills/jato-context.js";
 
 export interface MaterializeOptions {
   home?: string;
@@ -12,16 +12,16 @@ export interface MaterializeOptions {
 }
 
 export interface MaterializeOutput {
-  rigName: string;
+  jatoName: string;
   filesWritten: BackupResult[];
 }
 
 export async function materialize(
-  rigName: string,
+  jatoName: string,
   options: MaterializeOptions = {},
 ): Promise<MaterializeOutput> {
   const { home, targetRoot = process.cwd() } = options;
-  const rig = await loadRig(rigName, home);
+  const rig = await loadJato(jatoName, home);
 
   const filesWritten: BackupResult[] = [];
 
@@ -45,18 +45,18 @@ export async function materialize(
 
     const skillsDir = provider.skillsDir(home);
 
-    const contextSkillDir = join(skillsDir, "rig-context");
+    const contextSkillDir = join(skillsDir, "jato-context");
     await mkdir(contextSkillDir, { recursive: true });
-    const contextContent = generateRigContextSkill(rig);
+    const contextContent = generateJatoContextSkill(rig);
     const contextBackup = await writeWithBackup(
       join(contextSkillDir, "SKILL.md"),
       contextContent,
     );
     filesWritten.push(contextBackup);
 
-    const managerSkillDir = join(skillsDir, "rig-manager");
+    const managerSkillDir = join(skillsDir, "jato-manager");
     await mkdir(managerSkillDir, { recursive: true });
-    const managerSourcePath = join(getSkillsDir(home), "rig-manager.md");
+    const managerSourcePath = join(getSkillsDir(home), "jato-manager.md");
     let managerContent: string;
     try {
       managerContent = await readFile(managerSourcePath, "utf8");
@@ -65,7 +65,7 @@ export async function materialize(
       const { dirname } = await import("node:path");
       const __dirname = dirname(fileURLToPath(import.meta.url));
       managerContent = await readFile(
-        join(__dirname, "..", "skills", "rig-manager.md"),
+        join(__dirname, "..", "skills", "jato-manager.md"),
         "utf8",
       );
     }
@@ -76,7 +76,7 @@ export async function materialize(
     filesWritten.push(managerBackup);
   }
 
-  await writeGlobalConfig({ active_rig: rigName }, home);
+  await writeGlobalConfig({ active_jato: jatoName }, home);
 
-  return { rigName, filesWritten };
+  return { jatoName, filesWritten };
 }

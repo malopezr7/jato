@@ -4,9 +4,9 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const skillPath = join(__dirname, "../../src/skills/rig-manager.md");
+const skillPath = join(__dirname, "../../src/skills/jato-manager.md");
 
-describe("rig-manager.md", () => {
+describe("jato-manager.md", () => {
   it("exists and has content", async () => {
     const content = await readFile(skillPath, "utf8");
     expect(content.length).toBeGreaterThan(1000);
@@ -15,22 +15,22 @@ describe("rig-manager.md", () => {
   it("contains CLI operations section", async () => {
     const content = await readFile(skillPath, "utf8");
     expect(content).toContain("## CLI Operations");
-    expect(content).toContain("rig list");
-    expect(content).toContain("rig use");
-    expect(content).toContain("rig off");
-    expect(content).toContain("rig doctor");
+    expect(content).toContain("jato list");
+    expect(content).toContain("jato use");
+    expect(content).toContain("jato off");
+    expect(content).toContain("jato doctor");
   });
 
   it("contains rig creation wizard", async () => {
     const content = await readFile(skillPath, "utf8");
-    expect(content).toContain("## Creating a New Rig");
+    expect(content).toContain("## Creating a New Jato");
     expect(content).toContain("Step 1");
     expect(content).toContain("Step 7");
   });
 
   it("contains modification section", async () => {
     const content = await readFile(skillPath, "utf8");
-    expect(content).toContain("## Modifying an Existing Rig");
+    expect(content).toContain("## Modifying an Existing Jato");
   });
 
   it("contains MCP server catalog", async () => {

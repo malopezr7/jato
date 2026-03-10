@@ -56,19 +56,19 @@ describe("import → use lifecycle", () => {
     const initOutput = runCli("init --from claude --name imported --yes");
     expect(initOutput).toContain("Imported");
 
-    // Verify rig.yaml was created with imported MCPs
-    const rigYaml = await readFile(
-      join(tmpHome, ".rig", "rigs", "imported", "rig.yaml"),
+    // Verify jato.yaml was created with imported MCPs
+    const jatoYaml = await readFile(
+      join(tmpHome, ".jato", "rigs", "imported", "jato.yaml"),
       "utf8",
     );
-    const manifest = parseYaml(rigYaml);
+    const manifest = parseYaml(jatoYaml);
     expect(manifest.name).toBe("imported");
     expect(manifest.mcp_servers).toHaveLength(2);
     expect(manifest.mcp_servers.map((s: { id: string }) => s.id).sort()).toEqual(["github", "postgres"]);
 
     // Activate
     const useOutput = runCli("use imported");
-    expect(useOutput).toContain("Active rig: imported");
+    expect(useOutput).toContain("Active jato: imported");
 
     // Verify materialized settings.json has the MCPs
     const settings = JSON.parse(
@@ -79,7 +79,7 @@ describe("import → use lifecycle", () => {
 
     // Doctor check
     const doctorOutput = runCli("doctor");
-    expect(doctorOutput).toContain("rig doctor");
+    expect(doctorOutput).toContain("jato doctor");
     expect(doctorOutput).toContain("checks passed");
   });
 });

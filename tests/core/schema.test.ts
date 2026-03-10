@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { parseRigManifest, rigManifestSchema } from "../../src/core/schema.js";
+import { parseJatoManifest, jatoManifestSchema } from "../../src/core/schema.js";
 
-describe("rigManifestSchema", () => {
+describe("jatoManifestSchema", () => {
   it("parses a minimal valid manifest", () => {
-    const result = parseRigManifest({ name: "test" });
+    const result = parseJatoManifest({ name: "test" });
     expect(result).toEqual({
       name: "test",
       providers: {},
@@ -35,7 +35,7 @@ describe("rigManifestSchema", () => {
       permissions: { auto_execute: false },
     };
 
-    const result = parseRigManifest(input);
+    const result = parseJatoManifest(input);
     expect(result.name).toBe("mobile");
     expect(result.description).toBe("React Native mobile development setup");
     expect(result.providers).toEqual({ claude: true, codex: true, gemini: false });
@@ -47,7 +47,7 @@ describe("rigManifestSchema", () => {
   });
 
   it("applies defaults for optional fields", () => {
-    const result = parseRigManifest({
+    const result = parseJatoManifest({
       name: "minimal",
       mcp_servers: [{ id: "test", command: "echo" }],
     });
@@ -65,16 +65,16 @@ describe("rigManifestSchema", () => {
   });
 
   it("rejects a manifest without name", () => {
-    expect(() => parseRigManifest({})).toThrow();
+    expect(() => parseJatoManifest({})).toThrow();
   });
 
   it("rejects a manifest with empty name", () => {
-    expect(() => parseRigManifest({ name: "" })).toThrow();
+    expect(() => parseJatoManifest({ name: "" })).toThrow();
   });
 
   it("rejects invalid mcp_server transport", () => {
     expect(() =>
-      parseRigManifest({
+      parseJatoManifest({
         name: "test",
         mcp_servers: [{ id: "s", transport: "websocket" }],
       })
@@ -82,7 +82,7 @@ describe("rigManifestSchema", () => {
   });
 
   it("parses http transport mcp server", () => {
-    const result = parseRigManifest({
+    const result = parseJatoManifest({
       name: "test",
       mcp_servers: [
         { id: "remote", transport: "http", url: "https://example.com/mcp" },
