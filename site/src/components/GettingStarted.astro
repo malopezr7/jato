@@ -1,12 +1,12 @@
 ---
 const ways = [
-  { n: "Import", cmd: "rig init --from auto", d: "Scans your Claude, Codex, Gemini configs. Extracts MCPs, instructions, and skills into a rig." },
-  { n: "Template", cmd: "rig init --template mobile", d: "Pick a starter rig: mobile, backend, fullstack. Pre-configured MCPs, skills, and instructions." },
-  { n: "Wizard", cmd: "just ask your AI", d: "Once rig is installed, ask your LLM to build a rig from your description. It writes everything." },
+  { n: "Import", cmd: "jato init --from auto", d: "Scans your Claude, Codex, Gemini configs. Extracts MCPs, instructions, and skills into a jato." },
+  { n: "Template", cmd: "jato init --template mobile", d: "Pick a starter jato: mobile, backend, fullstack. Pre-configured MCPs, skills, and instructions." },
+  { n: "Wizard", cmd: "just ask your AI", d: "Once jato is installed, ask your LLM to build a jato from your description. It writes everything." },
 ];
 ---
 
-<section class="bg-rig-bg-alt py-20 px-8 transition-colors">
+<section class="bg-jato-bg-alt py-20 px-8 transition-colors">
   <div class="max-w-[900px] mx-auto">
     <div class="fade-in">
       <div class="section-label">Getting started</div>
@@ -20,12 +20,12 @@ const ways = [
       {
         ways.map((item, i) => (
           <div class="fade-in flex-1 min-w-[220px]" style={`transition-delay: ${0.1 + i * 0.05}s`}>
-            <div class="bg-rig-surface border border-rig-border rounded-xl p-6 transition-colors h-full">
-              <div class="font-mono text-[13px] font-medium text-rig-text mb-1">{item.n}</div>
-              <div class="font-mono text-[11px] text-rig-accent px-2 py-1 bg-rig-accent-soft rounded inline-block mb-3">
+            <div class="bg-jato-surface border border-jato-border rounded-xl p-6 transition-colors h-full">
+              <div class="font-mono text-[13px] font-medium text-jato-text mb-1">{item.n}</div>
+              <div class="font-mono text-[11px] text-jato-accent px-2 py-1 bg-jato-accent-soft rounded inline-block mb-3">
                 {item.cmd}
               </div>
-              <p class="text-sm text-rig-text-muted leading-relaxed m-0">{item.d}</p>
+              <p class="text-sm text-jato-text-muted leading-relaxed m-0">{item.d}</p>
             </div>
           </div>
         ))

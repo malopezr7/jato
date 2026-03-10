@@ -22,11 +22,11 @@ const features = [
   </div>
   <div class="fade-in" style="transition-delay: 0.15s">
     <Terminal>
-      <TermLine cmd="rig use mobile" />
+      <TermLine cmd="jato use mobile" />
       <TermLine
         prompt=" "
         cmd=""
-        output={`  ✓ Profile loaded — mobile\n  ✓ Claude Code  → ~/.claude/settings.json\n  ✓ Claude Code  → CLAUDE.md\n  ✓ Codex CLI    → ~/.codex/config.toml\n  ✓ Codex CLI    → AGENTS.md\n  ✓ Skills installed — rig-context, rig-manager\n\n  Active rig: mobile`}
+        output={`  ✓ Profile loaded — mobile\n  ✓ Claude Code  → ~/.claude/settings.json\n  ✓ Claude Code  → CLAUDE.md\n  ✓ Codex CLI    → ~/.codex/config.toml\n  ✓ Codex CLI    → AGENTS.md\n  ✓ Skills installed — jato-context, jato-manager\n\n  Active jato: mobile`}
         delay={0.1}
       />
     </Terminal>
@@ -36,8 +36,8 @@ const features = [
       {
         features.map((item) => (
           <div class="flex-1 min-w-[160px]">
-            <div class="font-mono text-xs font-medium mb-1.5 text-rig-text">{item.n}</div>
-            <div class="text-sm text-rig-text-muted leading-relaxed">{item.d}</div>
+            <div class="font-mono text-xs font-medium mb-1.5 text-jato-text">{item.n}</div>
+            <div class="text-sm text-jato-text-muted leading-relaxed">{item.d}</div>
           </div>
         ))
       }

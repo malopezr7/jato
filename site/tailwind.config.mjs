@@ -9,7 +9,7 @@ export default {
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
-        rig: {
+        jato: {
           bg: "var(--bg)",
           "bg-alt": "var(--bg-alt)",
           surface: "var(--surface)",

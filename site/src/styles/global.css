@@ -102,15 +102,15 @@
   }
 
   .section-label {
-    @apply font-mono text-[11px] tracking-[2px] uppercase text-rig-text-ghost mb-3;
+    @apply font-mono text-[11px] tracking-[2px] uppercase text-jato-text-ghost mb-3;
   }
 
   .section-title {
-    @apply text-[32px] font-light tracking-tight leading-tight text-rig-text mb-10;
+    @apply text-[32px] font-light tracking-tight leading-tight text-jato-text mb-10;
   }
 
   .section-muted {
-    @apply text-rig-text-faint;
+    @apply text-jato-text-faint;
   }
 }
 

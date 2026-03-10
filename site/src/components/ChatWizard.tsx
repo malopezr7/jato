@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 
 const CHAT_SCRIPT = [
-  { role: "user", text: "I need a rig for my React Native project with Expo. We use Supabase and GitHub." },
-  { role: "ai", text: "I'll create a mobile rig for you. Let me set that up with the right MCPs and skills." },
-  { role: "ai", type: "action", text: "Creating ~/.rig/rigs/mobile/rig.yaml" },
+  { role: "user", text: "I need a jato for my React Native project with Expo. We use Supabase and GitHub." },
+  { role: "ai", text: "I'll create a mobile jato for you. Let me set that up with the right MCPs and skills." },
+  { role: "ai", type: "action", text: "Creating ~/.jato/rigs/mobile/jato.yaml" },
   { role: "ai", type: "action", text: "Adding MCPs: github, supabase, filesystem" },
   { role: "ai", type: "action", text: "Generating instructions.md — RN conventions" },
   { role: "ai", type: "action", text: "Generating skills/testing-rn.md" },
   { role: "ai", type: "action", text: "Generating providers/claude.md" },
-  { role: "ai", type: "run", text: "$ rig use mobile" },
-  { role: "ai", text: "Done! Your mobile rig is active. Claude Code and Codex are configured with 3 MCPs, RN testing skills, and provider-specific instructions. Want to add anything else?" },
+  { role: "ai", type: "run", text: "$ jato use mobile" },
+  { role: "ai", text: "Done! Your mobile jato is active. Claude Code and Codex are configured with 3 MCPs, RN testing skills, and provider-specific instructions. Want to add anything else?" },
   { role: "user", text: "Add a code review skill focused on performance." },
   { role: "ai", type: "action", text: "Creating skills/perf-review.md" },
-  { role: "ai", type: "run", text: "$ rig use mobile" },
+  { role: "ai", type: "run", text: "$ jato use mobile" },
   { role: "ai", text: "Added. The skill covers bundle size analysis, re-render detection, and memory leak patterns for React Native." },
 ];
 
@@ -22,7 +22,7 @@ function TypingDots() {
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="w-[5px] h-[5px] rounded-full bg-rig-chat-dot"
+          className="w-[5px] h-[5px] rounded-full bg-jato-chat-dot"
           style={{ animation: `dotPulse 1.2s ease-in-out ${i * 0.2}s infinite` }}
         />
       ))}
@@ -46,8 +46,8 @@ function ChatBubble({ msg, visible, typing }: { msg: ChatMsg; visible: boolean; 
   if (isAction || isRun) {
     return (
       <div className={`flex justify-start pl-2 transition-all duration-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-        <div className={`font-mono text-xs flex items-center gap-1.5 py-0.5 ${isRun ? "text-rig-accent" : "text-rig-text-faint"}`}>
-          <span className="text-rig-accent text-[10px]">{isRun ? "▶" : "✓"}</span>
+        <div className={`font-mono text-xs flex items-center gap-1.5 py-0.5 ${isRun ? "text-jato-accent" : "text-jato-text-faint"}`}>
+          <span className="text-jato-accent text-[10px]">{isRun ? "▶" : "✓"}</span>
           {typing ? <TypingDots /> : msg.text}
         </div>
       </div>
@@ -59,8 +59,8 @@ function ChatBubble({ msg, visible, typing }: { msg: ChatMsg; visible: boolean; 
       <div
         className={`max-w-[82%] px-3.5 py-2.5 rounded-xl text-[13.5px] leading-relaxed ${
           isUser
-            ? "bg-rig-chat-user-bg text-rig-chat-user rounded-br-[4px]"
-            : "bg-rig-chat-ai-bg text-rig-chat-ai border border-rig-chat-ai-border rounded-bl-[4px]"
+            ? "bg-jato-chat-user-bg text-jato-chat-user rounded-br-[4px]"
+            : "bg-jato-chat-ai-bg text-jato-chat-ai border border-jato-chat-ai-border rounded-bl-[4px]"
         }`}
       >
         {typing ? <TypingDots /> : msg.text}
@@ -119,20 +119,20 @@ export default function ChatWizard() {
   return (
     <div
       ref={wrapperRef}
-      className="bg-rig-surface border border-rig-border rounded-2xl overflow-hidden max-w-[520px] w-full shadow-lg transition-colors"
+      className="bg-jato-surface border border-jato-border rounded-2xl overflow-hidden max-w-[520px] w-full shadow-lg transition-colors"
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b border-rig-border flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-lg bg-rig-accent-soft flex items-center justify-center font-mono text-xs font-medium text-rig-accent">
+      <div className="px-4 py-3 border-b border-jato-border flex items-center gap-2.5">
+        <div className="w-7 h-7 rounded-lg bg-jato-accent-soft flex items-center justify-center font-mono text-xs font-medium text-jato-accent">
           r
         </div>
         <div>
-          <div className="text-[13px] font-medium text-rig-text">rig manager</div>
-          <div className="text-[11px] text-rig-text-ghost">skill active</div>
+          <div className="text-[13px] font-medium text-jato-text">jato manager</div>
+          <div className="text-[11px] text-jato-text-ghost">skill active</div>
         </div>
         <div className="ml-auto flex gap-1">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="w-2 h-2 rounded-full bg-rig-term-dot" />
+            <div key={i} className="w-2 h-2 rounded-full bg-jato-term-dot" />
           ))}
         </div>
       </div>
@@ -143,8 +143,8 @@ export default function ChatWizard() {
           <ChatBubble key={i} msg={msg} visible={i < step || (i === step && typing)} typing={i === step && typing} />
         ))}
         {step >= CHAT_SCRIPT.length && (
-          <div className="text-center pt-3 pb-1 text-xs text-rig-text-ghost font-mono animate-[fadeUp_0.5s_ease_both]">
-            rig created conversationally ✦
+          <div className="text-center pt-3 pb-1 text-xs text-jato-text-ghost font-mono animate-[fadeUp_0.5s_ease_both]">
+            jato created conversationally ✦
           </div>
         )}
       </div>
