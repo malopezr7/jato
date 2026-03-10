@@ -1,5 +1,5 @@
 {
-  "name": "jato",
+  "name": "@malopezr7/jato",
   "version": "0.1.0",
   "description": "One directory. Every AI tool. Centralized configuration for Claude Code, Codex CLI, Gemini CLI, and OpenCode.",
   "type": "module",

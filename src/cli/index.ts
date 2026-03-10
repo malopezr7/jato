@@ -7,6 +7,7 @@ import { registerListCommand } from "./commands/list.js";
 import { registerOffCommand } from "./commands/off.js";
 import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerInstallCommand } from "./commands/install.js";
+import { registerSkillCommand } from "./commands/skill.js";
 
 export type CliResult = {
   exitCode: number;
@@ -28,6 +29,7 @@ export function createProgram(): Command {
   registerOffCommand(program);
   registerDoctorCommand(program);
   registerInstallCommand(program);
+  registerSkillCommand(program);
 
   return program;
 }
