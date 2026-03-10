@@ -1,0 +1,51 @@
+---
+const lines = [
+  { d: 0, l: "~/.rig/", t: "dir" },
+  { d: 1, l: "config.yaml", t: "file", dim: true },
+  { d: 1, l: "skills/", t: "dir" },
+  { d: 2, l: "rig-manager.md", t: "file", acc: true },
+  { d: 1, l: "rigs/", t: "dir" },
+  { d: 2, l: "mobile/", t: "dir", acc: true },
+  { d: 3, l: "rig.yaml", t: "file" },
+  { d: 3, l: "instructions.md", t: "file" },
+  { d: 3, l: "providers/", t: "dir" },
+  { d: 4, l: "claude.md", t: "file" },
+  { d: 4, l: "codex.md", t: "file" },
+  { d: 3, l: "skills/", t: "dir" },
+  { d: 4, l: "code-review.md", t: "file" },
+  { d: 4, l: "testing-rn.md", t: "file" },
+  { d: 3, l: ".env.example", t: "file", dim: true },
+  { d: 2, l: "backend/", t: "dir" },
+  { d: 3, l: "…", t: "more" },
+];
+---
+
+<div class="font-mono text-[13px] leading-[1.9]">
+  {
+    lines.map((r, i) => (
+      <div class="fade-in" style={`transition-delay: ${0.03 * i}s; padding-left: ${r.d * 20}px`}>
+        <div class="flex items-center gap-1.5">
+          {r.t === "dir" && (
+            <span class={r.acc ? "text-rig-accent" : "text-rig-text-faint"}>▸</span>
+          )}
+          {r.t === "file" && <span class="text-rig-dot text-[8px] mr-0.5">●</span>}
+          <span
+            class={
+              r.t === "dir"
+                ? r.acc
+                  ? "text-rig-accent font-medium"
+                  : "text-rig-text font-medium"
+                : r.dim
+                  ? "text-rig-text-faint"
+                  : r.acc
+                    ? "text-rig-accent"
+                    : "text-rig-text-secondary"
+            }
+          >
+            {r.l}
+          </span>
+        </div>
+      </div>
+    ))
+  }
+</div>

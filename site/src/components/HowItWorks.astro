@@ -1,0 +1,39 @@
+---
+import FileTree from "./FileTree.astro";
+
+const explanations = [
+  { label: "rig.yaml", desc: "The manifest declares which providers are active, what MCPs to configure, and permissions. Minimal by design." },
+  { label: "providers/", desc: "Provider-specific instruction files. claude.md becomes your CLAUDE.md. codex.md becomes AGENTS.md." },
+  { label: "skills/", desc: "Markdown skills files. Discovered automatically. Available to every LLM through the installed context skill." },
+];
+---
+
+<section id="how" class="bg-rig-bg-alt py-20 px-8 transition-colors">
+  <div class="max-w-[900px] mx-auto">
+    <div class="fade-in">
+      <div class="section-label">How it works</div>
+    </div>
+    <div class="fade-in" style="transition-delay: 0.05s">
+      <h2 class="section-title">
+        A rig is a folder.<br /><span class="section-muted"
+          >Everything inside is your AI&nbsp;setup.</span
+        >
+      </h2>
+    </div>
+    <div class="flex gap-12 flex-wrap items-start">
+      <div class="fade-in flex-1 min-w-[260px]" style="transition-delay: 0.1s">
+        <FileTree />
+      </div>
+      <div class="flex-1 min-w-[280px] flex flex-col gap-8">
+        {
+          explanations.map((item, i) => (
+            <div class="fade-in" style={`transition-delay: ${0.15 + i * 0.05}s`}>
+              <div class="font-mono text-xs text-rig-accent font-medium mb-2">{item.label}</div>
+              <p class="text-[15px] text-rig-text-muted leading-relaxed m-0">{item.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<nav
+  id="main-nav"
+  class="fixed top-0 left-0 right-0 z-50 px-8 h-14 flex items-center justify-between transition-all duration-300 border-b border-transparent"
+>
+  <span class="font-mono font-medium text-base -tracking-tight text-rig-text">rig</span>
+  <div class="flex items-center gap-5 text-sm">
+    <a href="#skill" class="hidden sm:inline text-rig-text-muted hover:text-rig-text transition-colors">The Skill</a>
+    <a href="#how" class="hidden sm:inline text-rig-text-muted hover:text-rig-text transition-colors">How it works</a>
+    <a href="#providers" class="hidden sm:inline text-rig-text-muted hover:text-rig-text transition-colors">Providers</a>
+    <ThemeToggle />
+    <a
+      href="https://github.com/malopezr7/rig"
+      target="_blank"
+      rel="noopener"
+      class="font-mono text-[13px] text-rig-text px-3.5 py-1.5 rounded-md border border-rig-btn-outline-border hover:bg-rig-btn-bg hover:text-rig-btn-text hover:border-rig-btn-bg transition-all"
+    >
+      GitHub →
+    </a>
+  </div>
+</nav>
+
+<style>
+  .nav-scrolled {
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .nav-border {
+    border-color: var(--nav-border) !important;
+  }
+</style>

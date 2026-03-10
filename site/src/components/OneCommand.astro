@@ -1,0 +1,46 @@
+---
+import Terminal from "./Terminal.astro";
+import TermLine from "./TermLine.astro";
+
+const features = [
+  { n: "Backup", d: "Every file gets a timestamped backup before writes. Always." },
+  { n: "Atomic", d: "Writes go to .tmp first, then rename. No half-written configs." },
+  { n: "Idempotent", d: "Run it twice, get the same result. No state accumulation." },
+];
+---
+
+<section class="max-w-[900px] mx-auto py-20 px-8">
+  <div class="fade-in">
+    <div class="section-label">One command</div>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.05s">
+    <h2 class="section-title">
+      Switch your entire AI environment<br /><span class="section-muted"
+        >in the time it takes to type it.</span
+      >
+    </h2>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.15s">
+    <Terminal>
+      <TermLine cmd="rig use mobile" />
+      <TermLine
+        prompt=" "
+        cmd=""
+        output={`  ✓ Profile loaded — mobile\n  ✓ Claude Code  → ~/.claude/settings.json\n  ✓ Claude Code  → CLAUDE.md\n  ✓ Codex CLI    → ~/.codex/config.toml\n  ✓ Codex CLI    → AGENTS.md\n  ✓ Skills installed — rig-context, rig-manager\n\n  Active rig: mobile`}
+        delay={0.1}
+      />
+    </Terminal>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.3s">
+    <div class="mt-10 flex gap-8 flex-wrap">
+      {
+        features.map((item) => (
+          <div class="flex-1 min-w-[160px]">
+            <div class="font-mono text-xs font-medium mb-1.5 text-rig-text">{item.n}</div>
+            <div class="text-sm text-rig-text-muted leading-relaxed">{item.d}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

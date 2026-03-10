@@ -1,0 +1,47 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  darkMode: "class",
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["DM Sans", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+      },
+      colors: {
+        rig: {
+          bg: "var(--bg)",
+          "bg-alt": "var(--bg-alt)",
+          surface: "var(--surface)",
+          "surface-hover": "var(--surface-hover)",
+          border: "var(--border)",
+          "border-subtle": "var(--border-subtle)",
+          text: "var(--text)",
+          "text-secondary": "var(--text-secondary)",
+          "text-muted": "var(--text-muted)",
+          "text-faint": "var(--text-faint)",
+          "text-ghost": "var(--text-ghost)",
+          accent: "var(--accent)",
+          "accent-soft": "var(--accent-soft)",
+          dot: "var(--dot)",
+          "term-dot": "var(--term-dot)",
+          "term-prompt": "var(--term-prompt)",
+          "term-output": "var(--term-output)",
+          code: "var(--code)",
+          "btn-bg": "var(--btn-bg)",
+          "btn-text": "var(--btn-text)",
+          "btn-hover": "var(--btn-hover)",
+          "btn-outline-border": "var(--btn-outline-border)",
+          "btn-outline-text": "var(--btn-outline-text)",
+          "chat-user": "var(--chat-user)",
+          "chat-user-bg": "var(--chat-user-bg)",
+          "chat-ai": "var(--chat-ai)",
+          "chat-ai-bg": "var(--chat-ai-bg)",
+          "chat-ai-border": "var(--chat-ai-border)",
+          "chat-dot": "var(--chat-dot)",
+        },
+      },
+    },
+  },
+  plugins: [],
+};

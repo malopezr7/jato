@@ -3,3 +3,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 *.bak.*
+site/node_modules/
+site/dist/
+site/.astro/

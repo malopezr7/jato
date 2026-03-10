@@ -1,0 +1,79 @@
+---
+const managerItems = [
+  "Create new rigs conversationally",
+  "Add MCPs, skills, agents on demand",
+  "Switch between rigs",
+  "Run diagnostics and health checks",
+  "Knows 10+ common MCP configurations",
+];
+
+const contextItems = [
+  "Active rig name and description",
+  "Available skills with file paths",
+  "Configured MCPs and their env vars",
+  "Global and provider-specific instructions",
+  "Agent definitions",
+];
+---
+
+<section class="max-w-[900px] mx-auto py-20 px-8">
+  <div class="fade-in">
+    <div class="section-label">Architecture</div>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.05s">
+    <h2 class="section-title">
+      Two skills. Two jobs.<br /><span class="section-muted">One seamless experience.</span>
+    </h2>
+  </div>
+
+  <div class="flex gap-5 flex-wrap">
+    <div class="fade-in flex-1 min-w-[280px]" style="transition-delay: 0.1s">
+      <div class="bg-rig-surface border border-rig-border rounded-xl p-7 transition-colors h-full">
+        <div class="font-mono text-[10px] font-medium text-rig-accent tracking-[1.5px] uppercase mb-2">
+          Global skill
+        </div>
+        <div class="text-lg font-medium text-rig-text mb-3">rig manager</div>
+        <p class="text-sm text-rig-text-muted leading-relaxed mb-4">
+          Installed once. Teaches the LLM to be your configuration wizard.
+        </p>
+        <div class="flex flex-col gap-2">
+          {managerItems.map((item) => (
+            <div class="flex items-center gap-2 text-[13px] text-rig-text-secondary">
+              <span class="text-rig-accent text-[10px]">◆</span>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-in flex-1 min-w-[280px]" style="transition-delay: 0.2s">
+      <div class="bg-rig-surface border border-rig-border rounded-xl p-7 transition-colors h-full">
+        <div class="font-mono text-[10px] font-medium text-rig-text-faint tracking-[1.5px] uppercase mb-2">
+          Per-rig skill
+        </div>
+        <div class="text-lg font-medium text-rig-text mb-3">rig context</div>
+        <p class="text-sm text-rig-text-muted leading-relaxed mb-4">
+          Generated fresh on every switch. Gives the LLM your current setup context.
+        </p>
+        <div class="flex flex-col gap-2">
+          {contextItems.map((item) => (
+            <div class="flex items-center gap-2 text-[13px] text-rig-text-secondary">
+              <span class="text-rig-text-faint text-[10px]">◆</span>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fade-in" style="transition-delay: 0.3s">
+    <div class="mt-8 px-5 py-4 rounded-[10px] bg-rig-accent-soft border border-rig-accent/10 flex items-center gap-3">
+      <span class="text-lg">💡</span>
+      <span class="text-sm text-rig-text-secondary leading-normal">
+        The rig manager skill is the real product. The CLI is plumbing — the LLM is the interface.
+      </span>
+    </div>
+  </div>
+</section>

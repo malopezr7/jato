@@ -1,0 +1,41 @@
+---
+import Terminal from "./Terminal.astro";
+import TermLine from "./TermLine.astro";
+---
+
+<section class="bg-rig-bg-alt py-20 px-8 transition-colors">
+  <div class="max-w-[900px] mx-auto">
+    <div class="fade-in">
+      <div class="section-label">Teams</div>
+    </div>
+    <div class="fade-in" style="transition-delay: 0.05s">
+      <h2 class="section-title">
+        A rig is a folder.<br /><span class="section-muted">Share it like you share code.</span>
+      </h2>
+    </div>
+    <div class="fade-in" style="transition-delay: 0.15s">
+      <Terminal title="New team member">
+        <TermLine cmd="rig install github.com/acme/ai-rig --rig mobile" />
+        <TermLine
+          prompt=" "
+          cmd=""
+          output={"  ✓ Cloned acme/ai-rig\n  ✓ Installed rig: mobile"}
+          delay={0.1}
+        />
+        <TermLine cmd="rig use mobile" delay={0.2} />
+        <TermLine
+          prompt=" "
+          cmd=""
+          output={"  ✓ Ready. Same tools, same context, zero config."}
+          delay={0.3}
+        />
+      </Terminal>
+    </div>
+    <div class="fade-in" style="transition-delay: 0.35s">
+      <p class="text-[15px] text-rig-text-muted leading-relaxed mt-8 max-w-[520px]">
+        No sync services. No cloud accounts. No proprietary formats. A git repo is your
+        distribution mechanism.
+      </p>
+    </div>
+  </div>
+</section>
