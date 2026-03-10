@@ -1,0 +1,33 @@
+---
+const commands = [
+  { c: "jato init", d: "Import, template, or empty — create your first jato" },
+  { c: "jato use <jato>", d: "Activate a jato — materialize configs and install skills" },
+  { c: "jato list", d: "Show available jatos" },
+  { c: "jato off", d: "Deactivate the current jato" },
+  { c: "jato doctor", d: "Health check — schema, env vars, providers, skills" },
+  { c: "jato install <repo>", d: "Install jatos from a git repository" },
+];
+---
+
+<section class="max-w-[900px] mx-auto py-20 px-8">
+  <div class="fade-in">
+    <div class="section-label">CLI</div>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.05s">
+    <h2 class="section-title">
+      Six commands.<br /><span class="section-muted">That's the whole surface.</span>
+    </h2>
+  </div>
+  <div class="font-mono text-sm flex flex-col">
+    {
+      commands.map((item, i) => (
+        <div class="fade-in" style={`transition-delay: ${0.05 * i}s`}>
+          <div class="flex items-baseline gap-6 py-4 border-b border-jato-border-subtle flex-wrap">
+            <span class="text-jato-text font-medium min-w-[220px] shrink-0">{item.c}</span>
+            <span class="text-jato-text-faint text-[13px] font-sans font-light">{item.d}</span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

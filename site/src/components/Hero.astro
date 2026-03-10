@@ -1,0 +1,100 @@
+---
+---
+
+<section class="max-w-[900px] mx-auto px-8 pt-36 pb-20 flex flex-col items-center text-center">
+  <div class="fade-in">
+    <div class="font-mono text-xs tracking-[2px] uppercase text-jato-text-ghost mb-6">
+      Configuration hub for AI coding tools
+    </div>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.1s">
+    <h1
+      class="text-[clamp(42px,7vw,72px)] font-light leading-[1.05] -tracking-[2px] m-0 text-jato-text"
+    >
+      One directory.<br /><span class="font-medium">Every AI tool.</span>
+    </h1>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.2s">
+    <p class="text-lg leading-relaxed text-jato-text-muted max-w-[540px] mt-8 font-light">
+      jato keeps your instructions, skills, MCPs, and agents in one place. Switch context with a
+      command. Build your setup conversationally with your AI.
+    </p>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.35s">
+    <div
+      id="install-block"
+      class="mt-12 inline-flex items-center gap-3 font-mono text-sm rounded-lg overflow-hidden border border-jato-border bg-jato-surface transition-colors"
+    >
+      <div class="flex items-center gap-2 pl-5 py-3">
+        <span class="text-jato-text-ghost select-none">$</span>
+        <code id="install-cmd" class="text-jato-text select-all">npx jato init</code>
+      </div>
+      <button
+        id="copy-btn"
+        aria-label="Copy to clipboard"
+        class="h-full px-4 py-3 border-l border-jato-border bg-transparent hover:bg-jato-surface-hover cursor-pointer transition-colors flex items-center"
+      >
+        <svg
+          id="copy-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-emerald-500"
+        >
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg
+          id="check-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-emerald-500 hidden"
+        >
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-[120px] mx-auto border-t border-jato-border-subtle transition-colors"></div>
+
+<script is:inline>
+  (function () {
+    function initCopy() {
+      var btn = document.getElementById("copy-btn");
+      var copyIcon = document.getElementById("copy-icon");
+      var checkIcon = document.getElementById("check-icon");
+
+      if (!btn) return;
+
+      btn.addEventListener("click", function () {
+        navigator.clipboard.writeText("npx jato init").then(function () {
+          if (copyIcon) copyIcon.classList.add("hidden");
+          if (checkIcon) checkIcon.classList.remove("hidden");
+          setTimeout(function () {
+            if (copyIcon) copyIcon.classList.remove("hidden");
+            if (checkIcon) checkIcon.classList.add("hidden");
+          }, 2000);
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCopy);
+    } else {
+      initCopy();
+    }
+  })();
+</script>

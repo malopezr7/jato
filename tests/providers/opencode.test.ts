@@ -1,0 +1,79 @@
+import { describe, it, expect } from "vitest";
+import { opencodeProvider } from "../../src/providers/opencode.js";
+import type { ResolvedJato } from "../../src/core/jato.js";
+
+function makeRig(overrides?: Partial<ResolvedJato>): ResolvedJato {
+  return {
+    manifest: {
+      name: "test",
+      providers: { opencode: true },
+      mcp_servers: [],
+      permissions: { auto_execute: false },
+    },
+    dir: "/fake/.jato/rigs/test",
+    providerDocs: {},
+    skills: [],
+    agents: [],
+    ...overrides,
+  };
+}
+
+describe("opencodeProvider", () => {
+  it("has correct config path", () => {
+    expect(opencodeProvider.configPath("/home/user")).toBe(
+      "/home/user/.config/opencode/opencode.json"
+    );
+  });
+
+  it("materializes config with interactive mode", () => {
+    const result = opencodeProvider.materialize(makeRig(), "/home/user");
+    const config = JSON.parse(result.files[0].content);
+    expect(config.mode).toBe("interactive");
+  });
+
+  it("sets auto mode for auto_execute", () => {
+    const rig = makeRig({
+      manifest: {
+        name: "test",
+        providers: {},
+        mcp_servers: [],
+        permissions: { auto_execute: true },
+      },
+    });
+
+    const result = opencodeProvider.materialize(rig, "/home/user");
+    const config = JSON.parse(result.files[0].content);
+    expect(config.mode).toBe("auto");
+  });
+
+  it("materializes MCP servers", () => {
+    const rig = makeRig({
+      manifest: {
+        name: "test",
+        providers: {},
+        mcp_servers: [
+          {
+            id: "github",
+            transport: "stdio",
+            command: "npx",
+            args: ["-y", "server-github"],
+            env: ["TOKEN"],
+            enabled: true,
+          },
+        ],
+        permissions: { auto_execute: false },
+      },
+    });
+
+    const result = opencodeProvider.materialize(rig, "/home/user");
+    const config = JSON.parse(result.files[0].content);
+    expect(config.mcp.github).toBeDefined();
+    expect(config.mcp.github.command).toBe("npx");
+  });
+
+  it("does not emit provider docs (no instructionsFileName)", () => {
+    const rig = makeRig();
+    const result = opencodeProvider.materialize(rig, "/home/user");
+    expect(result.files).toHaveLength(1);
+  });
+});

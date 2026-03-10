@@ -1,0 +1,49 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  aria-label="Toggle theme"
+  class="relative w-[50px] h-7 rounded-full border-none cursor-pointer p-0 flex-shrink-0"
+  style="background: var(--toggle-bg); transition: background 0.3s"
+>
+  <div
+    id="toggle-knob"
+    class="absolute top-[3px] w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs shadow-sm"
+    style="background: var(--toggle-knob); transition: left 0.25s cubic-bezier(0.22,1,0.36,1), background 0.3s"
+  >
+    <span id="toggle-icon" class="leading-none"></span>
+  </div>
+</button>
+
+<script is:inline>
+  (function () {
+    function initToggle() {
+      var toggle = document.getElementById("theme-toggle");
+      var knob = document.getElementById("toggle-knob");
+      var icon = document.getElementById("toggle-icon");
+
+      function update() {
+        var isDark = document.documentElement.classList.contains("dark");
+        if (knob) knob.style.left = isDark ? "25px" : "3px";
+        if (icon) icon.textContent = isDark ? "\uD83C\uDF19" : "\u2600\uFE0F";
+      }
+
+      update();
+
+      if (toggle) {
+        toggle.addEventListener("click", function () {
+          var isDark = document.documentElement.classList.toggle("dark");
+          localStorage.setItem("jato-theme", isDark ? "dark" : "light");
+          update();
+        });
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initToggle);
+    } else {
+      initToggle();
+    }
+  })();
+</script>

@@ -1,0 +1,33 @@
+---
+const providers = [
+  { name: "Claude Code", config: "→ settings.json\n→ CLAUDE.md\n→ skills/jato-context\n→ skills/jato-manager" },
+  { name: "Codex CLI", config: "→ config.toml\n→ AGENTS.md\n→ skills/jato-context\n→ skills/jato-manager" },
+  { name: "Gemini CLI", config: "→ settings.json\n→ GEMINI.md" },
+  { name: "OpenCode", config: "→ opencode.json" },
+];
+---
+
+<section id="providers" class="max-w-[900px] mx-auto py-20 px-8">
+  <div class="fade-in">
+    <div class="section-label">Providers</div>
+  </div>
+  <div class="fade-in" style="transition-delay: 0.05s">
+    <h2 class="section-title">
+      jato speaks every format<br /><span class="section-muted">so you don't have to.</span>
+    </h2>
+  </div>
+  <div class="flex gap-4 flex-wrap">
+    {
+      providers.map((p, i) => (
+        <div class="fade-in flex-1 min-w-[200px]" style={`transition-delay: ${0.1 + i * 0.05}s`}>
+          <div class="bg-jato-surface border border-jato-border rounded-[10px] p-5 px-6 transition-colors">
+            <div class="font-mono text-[13px] font-medium text-jato-text mb-3">{p.name}</div>
+            <div class="font-mono text-[11.5px] text-jato-text-muted leading-[1.7] whitespace-pre-wrap">
+              {p.config}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

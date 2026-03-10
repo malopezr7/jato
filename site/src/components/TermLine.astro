@@ -1,0 +1,21 @@
+---
+interface Props {
+  prompt?: string;
+  cmd: string;
+  output?: string;
+  delay?: number;
+}
+const { prompt = "$", cmd, output, delay = 0 } = Astro.props;
+---
+
+<div class="fade-in" style={`transition-delay: ${delay}s`}>
+  <div class="flex gap-2 items-baseline">
+    <span class="text-jato-term-prompt select-none">{prompt}</span>
+    <span class="text-jato-text font-medium">{cmd}</span>
+  </div>
+  {
+    output && (
+      <div class="text-jato-term-output ml-5 mt-0.5 whitespace-pre-wrap leading-relaxed" set:html={output} />
+    )
+  }
+</div>

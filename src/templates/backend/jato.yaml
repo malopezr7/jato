@@ -1,0 +1,21 @@
+name: backend
+description: Backend API development (Node.js / Python)
+
+providers:
+  claude: true
+  codex: false
+  gemini: false
+
+mcp_servers:
+  - id: github
+    command: npx
+    args: [-y, "@modelcontextprotocol/server-github"]
+    env: [GITHUB_TOKEN]
+
+  - id: postgres
+    command: npx
+    args: [-y, "@modelcontextprotocol/server-postgres"]
+    env: [DATABASE_URL]
+
+permissions:
+  auto_execute: false

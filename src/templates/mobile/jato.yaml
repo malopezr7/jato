@@ -1,0 +1,20 @@
+name: mobile
+description: React Native / Expo mobile development
+
+providers:
+  claude: true
+  codex: false
+  gemini: false
+
+mcp_servers:
+  - id: github
+    command: npx
+    args: [-y, "@modelcontextprotocol/server-github"]
+    env: [GITHUB_TOKEN]
+
+  - id: filesystem
+    command: npx
+    args: [-y, "@modelcontextprotocol/server-filesystem", "."]
+
+permissions:
+  auto_execute: false
