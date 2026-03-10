@@ -19,8 +19,11 @@ function makeJato(overrides?: Partial<ResolvedJato>): ResolvedJato {
 }
 
 describe("generateJatoContextSkill", () => {
-  it("generates minimal context", () => {
+  it("generates minimal context with YAML frontmatter", () => {
     const content = generateJatoContextSkill(makeJato());
+    expect(content).toMatch(/^---\n/);
+    expect(content).toContain("name: jato-context");
+    expect(content).toContain("description:");
     expect(content).toContain("# jato — Active Context");
     expect(content).toContain("## Active Jato: test");
     expect(content).not.toContain("## Available Skills");
@@ -119,6 +122,20 @@ describe("generateJatoContextSkill", () => {
     );
     expect(content).toContain("## Agents");
     expect(content).toContain("reviewer");
+  });
+
+  it("includes jato name in frontmatter description", () => {
+    const content = generateJatoContextSkill(
+      makeJato({
+        manifest: {
+          name: "mobile-app",
+          providers: {},
+          mcp_servers: [],
+          permissions: { auto_execute: false },
+        },
+      })
+    );
+    expect(content).toContain("'mobile-app'");
   });
 
   it("stays under 4KB for reasonable jatos", () => {

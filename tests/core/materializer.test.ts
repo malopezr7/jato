@@ -84,7 +84,7 @@ describe("materialize", () => {
     const managerSkill = join(tmpHome, ".claude", "skills", "jato-manager", "SKILL.md");
     expect(existsSync(managerSkill)).toBe(true);
     const managerContent = await readFile(managerSkill, "utf8");
-    expect(managerContent).toContain("jato — Manager Skill");
+    expect(managerContent).toContain("name: jato-manager");
   });
 
   it("updates global config with active jato", async () => {

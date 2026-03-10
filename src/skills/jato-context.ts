@@ -3,6 +3,22 @@ import type { ResolvedJato } from "../core/jato.js";
 export function generateJatoContextSkill(jato: ResolvedJato): string {
   const lines: string[] = [];
 
+  lines.push("---");
+  lines.push("name: jato-context");
+  lines.push(
+    "description: >",
+  );
+  lines.push(
+    `  Active jato environment context for '${jato.manifest.name}'. Provides current configuration,`,
+  );
+  lines.push(
+    "  available skills, MCP servers, and global instructions. Automatically loaded to inform",
+  );
+  lines.push(
+    "  about the active AI environment setup.",
+  );
+  lines.push("---");
+  lines.push("");
   lines.push("# jato — Active Context");
   lines.push("");
   lines.push("You are working within a jato-managed environment.");
