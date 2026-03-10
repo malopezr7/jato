@@ -1,0 +1,77 @@
+import { describe, it, expect } from "vitest";
+import { geminiProvider } from "../../src/providers/gemini.js";
+import type { ResolvedRig } from "../../src/core/rig.js";
+
+function makeRig(overrides?: Partial<ResolvedRig>): ResolvedRig {
+  return {
+    manifest: {
+      name: "test",
+      providers: { gemini: true },
+      mcp_servers: [],
+      permissions: { auto_execute: false },
+    },
+    dir: "/fake/.rig/rigs/test",
+    providerDocs: {},
+    skills: [],
+    agents: [],
+    ...overrides,
+  };
+}
+
+describe("geminiProvider", () => {
+  it("materializes settings with approvalMode", () => {
+    const result = geminiProvider.materialize(makeRig(), "/home/user");
+    const settings = JSON.parse(result.files[0].content);
+    expect(settings.approvalMode).toBe("default");
+  });
+
+  it("sets yolo mode for auto_execute", () => {
+    const rig = makeRig({
+      manifest: {
+        name: "test",
+        providers: {},
+        mcp_servers: [],
+        permissions: { auto_execute: true },
+      },
+    });
+
+    const result = geminiProvider.materialize(rig, "/home/user");
+    const settings = JSON.parse(result.files[0].content);
+    expect(settings.approvalMode).toBe("yolo");
+  });
+
+  it("materializes MCPs with trust flag", () => {
+    const rig = makeRig({
+      manifest: {
+        name: "test",
+        providers: {},
+        mcp_servers: [
+          {
+            id: "github",
+            transport: "stdio",
+            command: "npx",
+            args: ["-y", "server-github"],
+            env: ["GITHUB_TOKEN"],
+            enabled: true,
+          },
+        ],
+        permissions: { auto_execute: false },
+      },
+    });
+
+    const result = geminiProvider.materialize(rig, "/home/user");
+    const settings = JSON.parse(result.files[0].content);
+    expect(settings.mcpServers.github.trust).toBe(true);
+    expect(settings.mcpServers.github.env).toEqual({ GITHUB_TOKEN: "" });
+  });
+
+  it("materializes GEMINI.md", () => {
+    const rig = makeRig({
+      providerDocs: { gemini: "# Gemini" },
+    });
+
+    const result = geminiProvider.materialize(rig, "/home/user");
+    expect(result.files).toHaveLength(2);
+    expect(result.files[1].path).toBe("GEMINI.md");
+  });
+});
