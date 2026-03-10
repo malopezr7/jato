@@ -1,10 +1,32 @@
 {
   "name": "jato",
   "version": "0.1.0",
+  "description": "One directory. Every AI tool. Centralized configuration for Claude Code, Codex CLI, Gemini CLI, and OpenCode.",
   "type": "module",
   "bin": {
     "jato": "dist/cli/index.js"
   },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "ai",
+    "cli",
+    "config",
+    "claude",
+    "codex",
+    "gemini",
+    "opencode",
+    "mcp",
+    "developer-tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/malopezr7/rig.git"
+  },
+  "homepage": "https://jato.pages.dev",
+  "license": "MIT",
+  "author": "malopezr7",
   "scripts": {
     "build": "tsc && node -e \"const{cpSync}=require('fs');cpSync('src/skills/jato-manager.md','dist/skills/jato-manager.md');cpSync('src/templates','dist/templates',{recursive:true,filter:(s)=>!s.endsWith('.ts')})\"",
     "test": "vitest run",

@@ -10,7 +10,8 @@
 
 <p align="center">
   <strong>One directory. Every AI tool.</strong><br />
-  <sub>Centralized configuration for Claude Code, Codex CLI, Gemini CLI, and OpenCode.</sub>
+  <sub>Centralized configuration for Claude Code, Codex CLI, Gemini CLI, and OpenCode.</sub><br /><br />
+  <a href="https://jato.pages.dev">jato.pages.dev</a>
 </p>
 
 <br />
