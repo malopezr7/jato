@@ -31,19 +31,24 @@
     "build": "tsc && node -e \"const{cpSync}=require('fs');cpSync('src/skills/jato-manager.md','dist/skills/jato-manager.md');cpSync('src/templates','dist/templates',{recursive:true,filter:(s)=>!s.endsWith('.ts')})\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "pnpm dlx @biomejs/biome@latest check src tests"
+    "lint": "pnpm dlx @biomejs/biome@latest check src tests",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.2",
-    "commander": "^14.0.0",
     "chalk": "^5.4.1",
+    "commander": "^14.0.0",
     "yaml": "^2.8.1",
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
     "@types/node": "^22.10.0",
     "typescript": "^5.7.0",
     "vitest": "^3.2.4"
