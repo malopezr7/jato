@@ -12,11 +12,10 @@ describe("jato-manager.md", () => {
     expect(content.length).toBeGreaterThan(1000);
   });
 
-  it("contains installation instructions", async () => {
+  it("contains prerequisites and install instructions", async () => {
     const content = await readFile(skillPath, "utf8");
-    expect(content).toContain("## IMPORTANT: Before Doing Anything");
+    expect(content).toContain("## Prerequisites");
     expect(content).toContain("npx @malopezr7/jato");
-    expect(content).toContain("Never create jato files manually");
   });
 
   it("contains CLI operations section", async () => {
@@ -28,12 +27,20 @@ describe("jato-manager.md", () => {
     expect(content).toContain("jato doctor");
   });
 
-  it("contains jato creation guide", async () => {
+  it("contains jato creation guide with CLI and manual options", async () => {
     const content = await readFile(skillPath, "utf8");
     expect(content).toContain("## Creating a New Jato");
     expect(content).toContain("Option A");
     expect(content).toContain("Option B");
-    expect(content).toContain("Option C");
+    expect(content).toContain("Step 1");
+  });
+
+  it("contains recommended skills by stack", async () => {
+    const content = await readFile(skillPath, "utf8");
+    expect(content).toContain("## Recommended Skills by Stack");
+    expect(content).toContain("### Mobile");
+    expect(content).toContain("### Backend");
+    expect(content).toContain("### Frontend");
   });
 
   it("contains modification section", async () => {
@@ -49,9 +56,9 @@ describe("jato-manager.md", () => {
     expect(content).toContain("supabase");
   });
 
-  it("is between 2KB and 8KB", async () => {
+  it("is between 2KB and 10KB", async () => {
     const content = await readFile(skillPath, "utf8");
     expect(content.length).toBeGreaterThan(2048);
-    expect(content.length).toBeLessThan(8192);
+    expect(content.length).toBeLessThan(10240);
   });
 });
