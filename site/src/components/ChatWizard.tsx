@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 const CHAT_SCRIPT = [
   { role: "user", text: "I need a jato for my React Native project with Expo. We use Supabase and GitHub." },
   { role: "ai", text: "I'll create a mobile jato for you. Let me set that up with the right MCPs and skills." },
-  { role: "ai", type: "action", text: "Creating ~/.jato/rigs/mobile/jato.yaml" },
+  { role: "ai", type: "action", text: "Creating ~/.jato/jatos/mobile/jato.yaml" },
   { role: "ai", type: "action", text: "Adding MCPs: github, supabase, filesystem" },
   { role: "ai", type: "action", text: "Generating instructions.md — RN conventions" },
   { role: "ai", type: "action", text: "Generating skills/testing-rn.md" },
@@ -124,7 +124,7 @@ export default function ChatWizard() {
       {/* Header */}
       <div className="px-4 py-3 border-b border-jato-border flex items-center gap-2.5">
         <div className="w-7 h-7 rounded-lg bg-jato-accent-soft flex items-center justify-center font-mono text-xs font-medium text-jato-accent">
-          r
+          j
         </div>
         <div>
           <div className="text-[13px] font-medium text-jato-text">jato manager</div>
